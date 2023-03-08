@@ -1,0 +1,70 @@
+import React, { useEffect, useState } from 'react';
+import { TelegramClient } from 'telegram/client/TelegramClient';
+import { StringSession } from 'telegram/sessions';
+
+const apiID = Number(import.meta.env.VITE_API_ID)
+const apiHash = import.meta.env.VITE_API_HASH
+const session = new StringSession(""); // You should put your string session here
+const client = new TelegramClient(session, apiID, apiHash, {});
+type State = {
+    client: any | null
+    logout: () => void
+    login: (email: string, password: string) => void
+    loading: boolean
+}
+
+interface AuthProviderProps {
+    children: React.ReactNode
+}
+const AuthContext = React.createContext<State | undefined>(undefined)
+
+const AuthProvider = ({ children }: AuthProviderProps) => {
+    // const { toggleToast } = useToast();
+    const [user, setUser] = useState<any | null>(null)
+    const [loading, setLoading] = useState<boolean>(true)
+    async function getUserData() {
+
+
+    }
+    const init = async () => {
+        // await client.connect();
+        // if (await client.checkAuthorization()) {
+        //     const me = await client.getEntity("me");
+        //     console.log("My name is", me);
+        // }
+    }
+    useEffect(() => {
+        init()
+    }, []);
+    // const isLogged = useMemo(() => {
+    //     return !!user
+    // }, [user])
+
+    const logout = async () => {
+    }
+    const login = async (email: string, password: string) => {
+    }
+    return (
+        <AuthContext.Provider
+            value={{
+                client,
+                loading,
+                // isLogged,
+                login,
+                logout,
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
+    )
+}
+
+function useAuth() {
+    const context = React.useContext(AuthContext)
+    if (context === undefined) {
+        throw new Error('useAuth must be used within a AuthProvider')
+    }
+    return context
+}
+export { AuthProvider, useAuth };
+
