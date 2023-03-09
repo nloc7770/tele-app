@@ -1,48 +1,40 @@
 import Button from "@/components/common/button";
-// import { useToast } from "@/context/toast";
 import { oapcityVariants } from "@/helper/farmer-motion";
-// import { supabaseClient } from "@/services/supabase";
+import { useAuth } from "@/context/auth";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useAuth } from "@/context/auth";
+import { useToast } from "@/context/toast";
 
 const Login = () => {
-    const { client } = useAuth()
+    const {  client } = useAuth()
 
     const [loading, setLoading] = useState(true);
+    const { toggleToast } = useToast();
 
-    // const init = async () => {
-    //     directus.auth.token.then((element) => { });
-    //     directus.auth
-    //         .refresh()
-    //         .then((data: any) => {
-    //             getProfile();
-    //         })
-    //         .catch((error) => {
-    //             setLoading(true);
-    //         });
-    // };
-    // useEffect(() => {
-    //     init();
-    // }, []);
-    // const url = import.meta.env.VITE_CMS + "/auth/login/keycloak?redirect=" + location.href;
-    // const onClick = () => {
-    //     location.href = url;
-    // };
 
     const onLogin = async (e: any) => {
         e.preventDefault();
-
-        let phone = e.target.elements.email?.value;
+        let phone = e.target.elements.phone?.value;
         await client.start({
             phoneNumber: phone,
-            phoneCode: async () => await  prompt('Please enter your code'),
+            phoneCode: async () => await prompt('Please enter your code'),
             // TODO implement actual error handling 
-            onError: console.error
+            onError: (error:any) => {
+               return toggleToast({
+                    show: true,
+                    status: "fail",
+                    message: error?.message,
+                    time: 5000,
+                });
+            }
         })
-        console.log("You should now be connected.");
+        toggleToast({
+            show: true,
+            status: "success",
+            message: 'You should now be connected.',
+            time: 5000,
+        });
         localStorage.setItem("sessionString", client.session.save() as any as string)
-        await client.sendMessage("me", { message: "Hello!" });
     }
 
     return (
@@ -60,7 +52,7 @@ const Login = () => {
                             <div className="w-full">
                                 <div className="mb-10">
                                     <div className="flex justify-center">
-                                        <img  src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" className="animate-pulse animate-bounce h-16 cursor-pointer" alt="logo" />
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" className="animate-pulse animate-bounce h-16 cursor-pointer" alt="logo" />
 
                                     </div>
                                     <h2 className="mt-4 text-center text-3xl font-extrabold text-gray-900">
@@ -72,7 +64,7 @@ const Login = () => {
                                         <label className="block text-gray-700 text-sm font-bold mb-2" >
                                             Số điện thoại
                                         </label>
-                                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="text" placeholder="email" />
+                                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phone" type="text" placeholder="phone" />
                                     </div>
                                     {/* <div className="mb-6">
                                         <label className="block text-gray-700 text-sm font-bold mb-2" >
@@ -82,7 +74,7 @@ const Login = () => {
                                     </div> */}
                                     <div className="flex items-center justify-between">
                                         <Button
-                                        
+
                                             className="w-full"
                                             children={"Đăng nhập"}
                                         />

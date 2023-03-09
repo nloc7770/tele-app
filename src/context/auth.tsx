@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TelegramClient } from 'telegram/client/TelegramClient';
 import { StringSession } from 'telegram/sessions';
+import { useToast } from './toast';
 
 const apiID = Number(import.meta.env.VITE_API_ID)
 const apiHash = import.meta.env.VITE_API_HASH
@@ -9,8 +10,8 @@ const client = new TelegramClient(stringSession, apiID, apiHash, {});
 type State = {
     client: any | null
     logout: () => void
-    login: (email: string, password: string) => void
     loading: boolean
+    user: any | null
 }
 
 interface AuthProviderProps {
@@ -19,7 +20,7 @@ interface AuthProviderProps {
 const AuthContext = React.createContext<State | undefined>(undefined)
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-    // const { toggleToast } = useToast();
+    const { toggleToast } = useToast();
     const [user, setUser] = useState<any | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     async function getUserData() {
@@ -30,7 +31,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         await client.connect();
         if (await client.checkAuthorization()) {
             const me = await client.getMe();
-            console.log("My name is", me);
+            console.log(me)
+            
+            setUser(me)
         }
     }
     useEffect(() => {
@@ -42,16 +45,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const logout = async () => {
     }
-    const login = async (email: string, password: string) => {
-    }
     return (
         <AuthContext.Provider
             value={{
                 client,
                 loading,
-                // isLogged,
-                login,
+             
                 logout,
+                user
             }}
         >
             {children}
