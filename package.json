@@ -20,8 +20,10 @@
     "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-modal-promise": "^1.0.2",
     "react-router-dom": "^6.8.2",
-    "telegram": "^2.12.8",
+    "reactstrap": "^9.1.6",
+    "telegram": "^2.15.9",
     "util": "^0.12.5",
     "webpack": "5.21.2"
   },

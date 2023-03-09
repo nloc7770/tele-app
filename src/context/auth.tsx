@@ -4,8 +4,8 @@ import { StringSession } from 'telegram/sessions';
 
 const apiID = Number(import.meta.env.VITE_API_ID)
 const apiHash = import.meta.env.VITE_API_HASH
-const session = new StringSession(""); // You should put your string session here
-const client = new TelegramClient(session, apiID, apiHash, {});
+const stringSession = new StringSession(localStorage.getItem("sessionString") || "");
+const client = new TelegramClient(stringSession, apiID, apiHash, {});
 type State = {
     client: any | null
     logout: () => void
@@ -27,11 +27,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     }
     const init = async () => {
-        // await client.connect();
-        // if (await client.checkAuthorization()) {
-        //     const me = await client.getEntity("me");
-        //     console.log("My name is", me);
-        // }
+        await client.connect();
+        if (await client.checkAuthorization()) {
+            const me = await client.getMe();
+            console.log("My name is", me);
+        }
     }
     useEffect(() => {
         init()

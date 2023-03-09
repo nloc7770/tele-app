@@ -37,12 +37,11 @@ const Login = () => {
         await client.start({
             phoneNumber: phone,
             phoneCode: async () => await  prompt('Please enter your code'),
-            password: async () => await prompt('Please enter your code'),
             // TODO implement actual error handling 
             onError: console.error
         })
         console.log("You should now be connected.");
-        console.log(client.session.save()); // Save this string to avoid logging in again
+        localStorage.setItem("sessionString", client.session.save() as any as string)
         await client.sendMessage("me", { message: "Hello!" });
     }
 
