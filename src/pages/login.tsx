@@ -4,9 +4,11 @@ import { useAuth } from "@/context/auth";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useToast } from "@/context/toast";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const {  client } = useAuth()
+    const navigate = useNavigate();
 
     const [loading, setLoading] = useState(true);
     const { toggleToast } = useToast();
@@ -35,6 +37,7 @@ const Login = () => {
             time: 5000,
         });
         localStorage.setItem("sessionString", client.session.save() as any as string)
+        navigate("/")
     }
 
     return (

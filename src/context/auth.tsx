@@ -35,6 +35,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             
             setUser(me)
         }
+        setLoading(false)
     }
     useEffect(() => {
         init()
@@ -50,12 +51,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             value={{
                 client,
                 loading,
-             
                 logout,
                 user
             }}
         >
-            {children}
+            {!loading&&children}
         </AuthContext.Provider>
     )
 }
