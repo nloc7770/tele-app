@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TelegramClient } from 'telegram/client/TelegramClient';
 import { StringSession } from 'telegram/sessions';
+import { useToast } from './toast';
 
 const apiID = Number(import.meta.env.VITE_API_ID)
 const apiHash = import.meta.env.VITE_API_HASH
@@ -22,13 +23,19 @@ const AuthContext = React.createContext<State | undefined>(undefined)
 const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<any | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
+    const { toggleToast } = useToast();
 
     const init = async () => {
         await client.connect();
         if (await client.checkAuthorization()) {
             const me = await client.getMe();
-            console.log(me)
             setUser(me)
+                toggleToast({
+            show: true,
+            status: "success",
+            message: 'You should now be connected.',
+            time: 5000,
+        });
         }
         setLoading(false)
     }

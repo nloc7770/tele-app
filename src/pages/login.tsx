@@ -32,12 +32,7 @@ const Login = () => {
         })
         localStorage.setItem("sessionString", client.session.save() as any as string)
         redirect("/");
-        toggleToast({
-            show: true,
-            status: "success",
-            message: 'You should now be connected.',
-            time: 5000,
-        });
+    
     }
 
     return (
