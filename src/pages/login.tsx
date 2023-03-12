@@ -1,13 +1,13 @@
 import Button from "@/components/common/button";
-import { oapcityVariants } from "@/helper/farmer-motion";
 import { useAuth } from "@/context/auth";
+import { useToast } from "@/context/toast";
+import { oapcityVariants } from "@/helper/farmer-motion";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useToast } from "@/context/toast";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const {  client } = useAuth()
+    const { client } = useAuth()
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(true);
@@ -21,8 +21,8 @@ const Login = () => {
             phoneNumber: phone,
             phoneCode: async () => await prompt('Please enter your code'),
             // TODO implement actual error handling 
-            onError: (error:any) => {
-               return toggleToast({
+            onError: (error: any) => {
+                return toggleToast({
                     show: true,
                     status: "fail",
                     message: error?.message,
@@ -30,14 +30,14 @@ const Login = () => {
                 });
             }
         })
+        localStorage.setItem("sessionString", client.session.save() as any as string)
+        redirect("/");
         toggleToast({
             show: true,
             status: "success",
             message: 'You should now be connected.',
             time: 5000,
         });
-        localStorage.setItem("sessionString", client.session.save() as any as string)
-        navigate("/")
     }
 
     return (

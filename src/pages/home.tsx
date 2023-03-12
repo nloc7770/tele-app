@@ -1,62 +1,119 @@
 import { useAuth } from '@/context/auth';
+import { useToast } from '@/context/toast';
+import Papa from "papaparse";
 import { useState } from 'react';
-import { TelegramClient } from 'telegram';
+import { Spinner } from 'reactstrap';
+import { Api } from 'telegram';
 import { generateRandomBytes, readBigIntFromBuffer } from 'telegram/Helpers';
-import { StringSession } from 'telegram/sessions';
-import { Api } from 'telegram/tl/api';
-
+interface Item {
+    index: number,
+    phone: string,
+    firstName: string,
+    lastName: string,
+}
 
 export default function index() {
-    const [file, setFile] = useState();
-    const fileReader = new FileReader();
     const { client, user } = useAuth();
+    const [data, setData] = useState<Item[]>([]);
+    const [error, setError] = useState("");
+    const { toggleToast } = useToast();
 
-    // const handleOnChange = (e: any) => {
-    //     setFile(e.target.files[0]);
-    // };
-    const handleOnSubmit = async () => {
+    const handleOnChange = (e: any) => {
+     try {
+         const file = e.target.files[0]
+         // If user clicks the parse button without
+         // a file we show a error
+         if (!file) return setError("Enter a valid file");
 
-        await client.connect(); // This assumes you have already authenticated with .start()
-        const result = await client.invoke(
-            new Api.contacts.ImportContacts({
-                contacts: [
-                    new Api.InputPhoneContact({
-                        clientId: readBigIntFromBuffer(generateRandomBytes(8)),
-                        phone: "+84347779264",
-                        firstName: "Test Loc Them tư contract",
-                        lastName: "ádasdas",
-                    }),
-                ],
-            })
-        )
+         // Initialize a reader which allows user
+         // to read any file or blob.
+         const reader = new FileReader();
 
-        console.log(result); // prints the result
-        // e.preventDefault(); if (file) {
-        //     fileReader.onload = function (event: any) {
-        //         const csvOutput = event.target.result;
-        //     };
-        //     fileReader.readAsText(file);
-        // }
-
+         // Event listener on reader when the file
+         // loads, we parse it and set the data.
+         reader.onload = async ({ target }) => {
+             const csv = Papa.parse(target.result, { header: true });
+             const parsedData = csv?.data;
+             const launchOptimistic = parsedData.map((elem, index) => (
+                 {
+                     index: index + 1,
+                     phone: elem.phone,
+                     firstName: elem.firstName,
+                     lastName: elem.lastName,
+                 }
+             ));
+             for (let index = 0; index < launchOptimistic.length; index++) {
+                 const element = launchOptimistic[index];
+                 await client.invoke(
+                     new Api.contacts.ImportContacts({
+                         contacts: [
+                             new Api.InputPhoneContact({
+                                 clientId: readBigIntFromBuffer(generateRandomBytes(8)),
+                                 phone: `+${element.phone}`,
+                                 firstName: element.firstName,
+                                 lastName: element.lastName,
+                             }),
+                         ],
+                     })
+                 )
+             }
+             setData(launchOptimistic);
+         };
+         reader.readAsText(file);
+         toggleToast({
+             show: true,
+             status: "success",
+             message: "Thêm liên hệ thành công",
+             time: 5000,
+         });
+     } catch (error) {
+         toggleToast({
+             show: true,
+             status: "fail",
+             message: "Lỗi hệ thống",
+             time: 5000,
+         });
+     }
     };
-    return (
-        <div ><div style={{ textAlign: "center" }}>
-            <h1>Import tele-script </h1>
-            {/* <input
-                    type={"file"}
-                    id={"csvFileInput"}
-                    accept={".csv"}
-                    onChange={handleOnChange}
-                /> */}
 
-            <button
-                type='button'
-                onClick={() => {
-                    handleOnSubmit();
-                }}
-            >
-                IMPORT CSV
-            </button>
-        </div></div>
+    return (
+        <div className='flex flex-col justify-center items-center w-full'>
+            <h1>Import tele-script </h1>
+            <div className='my-5 self-end flex'>
+                <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer ">
+                    <input
+                        onChange={handleOnChange}
+                        id="csvInput"
+                        name="file"
+                        type="File"
+                        accept={".csv"}
+                    />
+
+                    Thêm liên hệ
+                </label>
+            </div>
+            <div className='w-full'>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Số điện thoại</th>
+                            <th>Họ</th>
+                            <th>Tên</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.length > 0 && data?.map((item, index) =>
+                            <tr key={index}>
+                                <th>{item?.index}</th>
+                                <th>{item?.phone}</th>
+                                <th>{item?.firstName}</th>
+                                <th>{item?.lastName}</th>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     )
 }

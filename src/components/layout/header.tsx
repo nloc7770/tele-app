@@ -6,16 +6,19 @@ import { oapcityVariants } from "@/helper/farmer-motion";
 import { Popover, Transition } from "@headlessui/react";
 import { motion } from "framer-motion";
 import { useSwipeable } from "react-swipeable";
+import { Api } from "telegram";
 
 export let setMenu: any = () => { };
 
 const Header = () => {
     const navigate = useNavigate();
-    const { user, logout } = useAuth();
+    const { user,client } = useAuth();
     const [show, setShow] = useState(false);
     setMenu = setShow;
-    const onLogout = () => {
-        logout()
+    const onLogout = async() => {
+        await client?.invoke(new Api.auth.LogOut())
+        localStorage.removeItem("sessionString")
+        navigate('/login')
     };
 
     return (
@@ -80,7 +83,7 @@ const Header = () => {
                                                         src={"/images/avatar-icon.png"}
                                                     />
                                                     <span className="hidden md:block body-2-highlight max-w-[13rem] truncate">
-                                                        {user?.email}
+                                                        {user?.username}
                                                     </span>
                                                     <img src="/images/chevron-black-down.png" className="w-[24px] ml-[6px]"></img>
                                                 </Popover.Button>
@@ -107,7 +110,7 @@ const Header = () => {
                                                                     </div>
                                                                     <div className="ml-2">
                                                                         <p className="body-2-highlight text-gray-900 whitespace-nowrap ">
-                                                                            {user?.email}
+                                                                            {user?.username}
                                                                         </p>
                                                                     </div>
                                                                 </span>
