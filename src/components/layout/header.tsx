@@ -18,7 +18,7 @@ const Header = () => {
     const onLogout = async() => {
         await client?.invoke(new Api.auth.LogOut())
         localStorage.removeItem("sessionString")
-        location.reload();
+        location.href = "https://tele-app-kappa.vercel.app/"
     };
 
     return (

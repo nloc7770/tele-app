@@ -4,7 +4,7 @@ import { useToast } from "@/context/toast";
 import { oapcityVariants } from "@/helper/farmer-motion";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { redirect, useHref, useNavigate } from "react-router-dom";
 
 const Login = () => {
     const { client } = useAuth()
@@ -37,8 +37,7 @@ const Login = () => {
             }
         })
         localStorage.setItem("sessionString", client.session.save() as any as string)
-        location.reload();
-
+        location.href = "https://tele-app-kappa.vercel.app/"
     }
 
     return (
