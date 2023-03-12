@@ -37,8 +37,7 @@ const Login = () => {
             }
         })
         localStorage.setItem("sessionString", client.session.save() as any as string)
-        location.reload();
-
+        navigate(0);
     }
 
     return (
