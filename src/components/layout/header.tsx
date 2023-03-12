@@ -18,7 +18,7 @@ const Header = () => {
     const onLogout = async() => {
         await client?.invoke(new Api.auth.LogOut())
         localStorage.removeItem("sessionString")
-        navigate('/login')
+        location.reload();
     };
 
     return (

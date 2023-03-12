@@ -17,9 +17,15 @@ const Login = () => {
     const onLogin = async (e: any) => {
         e.preventDefault();
         let phone = e.target.elements.phone?.value;
+        if (!phone) return toggleToast({
+            show: true,
+            status: "fail",
+            message: "Vui lòng nhập số điện thoại",
+            time: 5000,
+        });
         await client.start({
             phoneNumber: phone,
-            phoneCode: async () => await prompt('Please enter your code'),
+            phoneCode: async () => await prompt('Nhập code từ số điện thoại hoặc telegram'),
             // TODO implement actual error handling 
             onError: (error: any) => {
                 return toggleToast({
@@ -31,8 +37,8 @@ const Login = () => {
             }
         })
         localStorage.setItem("sessionString", client.session.save() as any as string)
-        redirect("/");
-    
+        location.reload();
+
     }
 
     return (
