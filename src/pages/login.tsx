@@ -37,7 +37,7 @@ const Login = () => {
             }
         })
         localStorage.setItem("sessionString", client.session.save() as any as string)
-        navigate(0);
+        navigate('/');
     }
 
     return (
