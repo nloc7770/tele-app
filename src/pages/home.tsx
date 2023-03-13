@@ -2,6 +2,8 @@ import { useAuth } from '@/context/auth';
 import { useToast } from '@/context/toast';
 import Papa from "papaparse";
 import { useState } from 'react';
+import { Api } from 'telegram';
+import { generateRandomBytes, readBigIntFromBuffer } from 'telegram/Helpers';
 interface Item {
     index: number,
     phone: string,
