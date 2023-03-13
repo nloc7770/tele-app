@@ -28,7 +28,7 @@
     "react-router-dom": "^6.8.2",
     "react-swipeable": "^7.0.0",
     "reactstrap": "^9.1.6",
-    "telegram": "^2.15.10",
+    "telegram": "^2.14.9",
     "util": "^0.12.5",
     "webpack": "5.21.2"
   },
