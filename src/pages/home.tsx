@@ -19,7 +19,7 @@ export default function index() {
 
     const handleOnChange = (e: any) => {
         try {
-            const file =(e.target as HTMLInputElement)?.files?.[0]
+            const file = (e.target as HTMLInputElement)?.files?.[0]
             // If user clicks the parse button without
             // a file we show a error
             if (!file) return toggleToast({
@@ -48,18 +48,20 @@ export default function index() {
                 ));
                 for (let index = 0; index < launchOptimistic.length; index++) {
                     const element = launchOptimistic[index];
-                    await client.invoke(
-                        new Api.contacts.ImportContacts({
-                            contacts: [
-                                new Api.InputPhoneContact({
-                                    clientId: readBigIntFromBuffer(generateRandomBytes(8)),
-                                    phone: `+${element.phone}`,
-                                    firstName: element.firstName,
-                                    lastName: element.lastName,
-                                }),
-                            ],
-                        })
-                    )
+                    if (element.phone && element.firstName) {
+                        await client.invoke(
+                            new Api.contacts.ImportContacts({
+                                contacts: [
+                                    new Api.InputPhoneContact({
+                                        clientId: readBigIntFromBuffer(generateRandomBytes(8)),
+                                        phone: `+${element.phone}`,
+                                        firstName: element.firstName,
+                                        lastName: element.lastName,
+                                    }),
+                                ],
+                            })
+                        )
+                    }
                 }
                 setData(launchOptimistic);
             };
@@ -79,7 +81,7 @@ export default function index() {
             });
         }
     };
-    
+
     return (
         <div className='flex flex-col justify-center items-center w-full'>
             <h1>Import tele-script </h1>
@@ -107,13 +109,16 @@ export default function index() {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.length > 0 && data?.map((item, index) =>
-                            <tr key={index}>
-                                <th>{item?.index}</th>
-                                <th>{item?.phone}</th>
-                                <th>{item?.firstName}</th>
-                                <th>{item?.lastName}</th>
-                            </tr>
+                        {data.length > 0 && data?.map((item, index) => {
+                            return (
+                                item?.phone && <tr key={index} >
+                                    <th>{item?.index}</th>
+                                    <th>{item?.phone}</th>
+                                    <th>{item?.firstName}</th>
+                                    <th>{item?.lastName}</th>
+                                </tr>
+                            )
+                        }
                         )}
                     </tbody>
                 </table>

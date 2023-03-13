@@ -30,12 +30,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         if (await client.checkAuthorization()) {
             const me = await client.getMe();
             setUser(me)
-                toggleToast({
-            show: true,
-            status: "success",
-            message: 'You should now be connected.',
-            time: 5000,
-        });
+            toggleToast({
+                show: true,
+                status: "success",
+                message: 'You should now be connected.',
+                time: 5000,
+            });
         }
         setLoading(false)
     }
@@ -64,4 +64,3 @@ function useAuth() {
     return context
 }
 export { AuthProvider, useAuth };
-

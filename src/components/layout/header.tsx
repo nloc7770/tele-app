@@ -5,17 +5,16 @@ import { CloseIcon, MenuIcon } from "@/components/icons";
 import { oapcityVariants } from "@/helper/farmer-motion";
 import { Popover, Transition } from "@headlessui/react";
 import { motion } from "framer-motion";
-import { useSwipeable } from "react-swipeable";
 import { Api } from "telegram";
 
 export let setMenu: any = () => { };
 
 const Header = () => {
     const navigate = useNavigate();
-    const { user,client } = useAuth();
+    const { user, client } = useAuth();
     const [show, setShow] = useState(false);
     setMenu = setShow;
-    const onLogout = async() => {
+    const onLogout = async () => {
         await client?.invoke(new Api.auth.LogOut())
         localStorage.removeItem("sessionString")
         location.href = "https://tele-app-kappa.vercel.app/"
