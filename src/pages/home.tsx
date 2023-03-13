@@ -48,7 +48,7 @@ export default function index() {
                 ));
                 for (let index = 0; index < launchOptimistic.length; index++) {
                     const element = launchOptimistic[index];
-                    if (element) {
+                    if (element.phone && element.firstName) {
                         await client.invoke(
                             new Api.contacts.ImportContacts({
                                 contacts: [
