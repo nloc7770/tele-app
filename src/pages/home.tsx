@@ -48,18 +48,20 @@ export default function index() {
                 ));
                 for (let index = 0; index < launchOptimistic.length; index++) {
                     const element = launchOptimistic[index];
-                    await client.invoke(
-                        new Api.contacts.ImportContacts({
-                            contacts: [
-                                new Api.InputPhoneContact({
-                                    clientId: readBigIntFromBuffer(generateRandomBytes(8)),
-                                    phone: `+${element.phone}`,
-                                    firstName: element.firstName,
-                                    lastName: element.lastName,
-                                }),
-                            ],
-                        })
-                    )
+                    if (element) {
+                        await client.invoke(
+                            new Api.contacts.ImportContacts({
+                                contacts: [
+                                    new Api.InputPhoneContact({
+                                        clientId: readBigIntFromBuffer(generateRandomBytes(8)),
+                                        phone: `+${element.phone}`,
+                                        firstName: element.firstName,
+                                        lastName: element.lastName,
+                                    }),
+                                ],
+                            })
+                        )
+                   }
                 }
                 setData(launchOptimistic);
             };
