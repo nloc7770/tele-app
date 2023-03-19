@@ -62,13 +62,13 @@ export default function index() {
                     }
                     return res;
                 }
-                setData(sliceIntoChunks(launchOptimistic, 100));
+                setData(sliceIntoChunks(launchOptimistic, 50));
             };
             reader.readAsText(file);
             toggleToast({
                 show: true,
                 status: "success",
-                message: "Thêm liên hệ thành công",
+                message: "Lấy danh sách liên hệ thành công",
                 time: 5000,
             });
         } catch (error) {
@@ -109,21 +109,40 @@ export default function index() {
                 )
                 if (result.imported.length > 0) {
                     element.status = 1
+                    toggleToast({
+                        show: true,
+                        status: "success",
+                        message: `Tiến trình với số điện thoại ${element.phone} thành công`,
+                        time: 2000,
+                    });
                 } else {
                     element.status = 2
+                    toggleToast({
+                        show: true,
+                        status: "fail",
+                        message: `Tiến trình với số điện thoại ${element.phone} thất bại`,
+                        time: 2000,
+                    });
                 }
                 await supabase
                     .from('data')
                     .upsert(element)
-                await delay(4000);
+                await delay(2000);
             }
         }
-
-        if (data?.length !== number) {
-            setPageActive(number + 1)
-            await handleAddContact(number + 1)
-        }
         setLoading(false)
+        setPageActive(number + 1)
+        toggleToast({
+            show: true,
+            status: "warning",
+            message: "Vui lòng chờ 2 phút để tiến trình tiếp tục!",
+            time: 5000,
+        });
+        setTimeout(async() => {
+            if (data?.length !== number) {
+                await handleAddContact(number + 1)
+            }
+        }, 120000);
     }
 
     return (
