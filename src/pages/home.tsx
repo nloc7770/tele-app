@@ -136,7 +136,7 @@ export default function index() {
             show: true,
             status: "warning",
             message: "Vui lòng chờ 2 phút để tiến trình tiếp tục!",
-            time: 5000,
+            time: 120000,
         });
         setTimeout(async() => {
             if (data?.length !== number) {
