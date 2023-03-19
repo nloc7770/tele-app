@@ -51,6 +51,7 @@ export default function index() {
                         firstName: elem.firstName,
                         lastName: elem.lastName,
                         status: 0,
+                        username:user?.username
                     }
                 ));
                 function sliceIntoChunks(arr: Item[], chunkSize: number) {
