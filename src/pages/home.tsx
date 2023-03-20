@@ -153,7 +153,7 @@ export default function index() {
         <div className='flex flex-col justify-center items-center w-full'>
             <h1>Import tele-script </h1>
             {data?.length > 0 && <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
-                <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${pageRunning * 100 / data?.length}%` }}>{pageRunning * 100 / data?.length}%</div>
+                <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${pageRunning * 100 / data?.length}%` }}>{(pageRunning * 100 / data?.length).toFixed(2)}%</div>
             </div>}
             <div className='my-5 self-end flex'>
                 <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer ">
