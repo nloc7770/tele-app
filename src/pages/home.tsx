@@ -25,6 +25,8 @@ export default function index() {
 
     const handleOnChange = (e: any) => {
         try {
+            setPageActive(0)
+            setPageRunning(0)
             const file = (e.target as HTMLInputElement)?.files?.[0]
             // If user clicks the parse button without
             // a file we show a error
@@ -132,6 +134,7 @@ export default function index() {
         }
         setLoading(false)
         setPageActive(number + 1)
+        setPageRunning(number + 1)
         toggleToast({
             show: true,
             status: "warning",
@@ -149,6 +152,9 @@ export default function index() {
 
         <div className='flex flex-col justify-center items-center w-full'>
             <h1>Import tele-script </h1>
+            {data?.length > 0 && <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+                <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${pageRunning * 100 / data?.length}%` }}>{pageRunning * 100 / data?.length}%</div>
+            </div>}
             <div className='my-5 self-end flex'>
                 <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer ">
                     <input
