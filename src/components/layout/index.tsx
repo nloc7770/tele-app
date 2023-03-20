@@ -5,11 +5,13 @@ import { Fragment, lazy, Suspense } from "react";
 import { Navigate, Outlet, useLocation, useRoutes } from "react-router-dom";
 import Header from "./header";
 const HomePage = lazy(() => import("@/pages/home"));
+const HistoryPage = lazy(() => import("@/pages/history"));
 
 export const PrivateRoute = () => {
   const location = useLocation();
    const routes = [
-    { path: "/", element: <HomePage /> },
+     { path: "/", element: <HomePage /> },
+     { path: "/history", element: <HistoryPage /> },
   ];
   const element = useRoutes(routes);
   let { user, loading } = useAuth();

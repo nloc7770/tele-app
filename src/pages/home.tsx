@@ -51,7 +51,7 @@ export default function index() {
                         firstName: elem.firstName,
                         lastName: elem.lastName,
                         status: 0,
-                        username:user?.username
+                        username: user?.username
                     }
                 ));
                 function sliceIntoChunks(arr: Item[], chunkSize: number) {
@@ -138,7 +138,7 @@ export default function index() {
             message: "Vui lòng chờ 2 phút để tiến trình tiếp tục!",
             time: 120000,
         });
-        setTimeout(async() => {
+        setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
@@ -206,22 +206,27 @@ export default function index() {
             </div>
             {data && data?.length > 0 && <div className="flex items-center space-x-1 self-end mt-3">
                 <a onClick={() => {
-                    setPageActive(pageActive - 1)
+                    if (pageActive != 0) {
+                        setPageActive(pageActive - 1)
+                    }
                 }} className="flex items-center px-4 py-2 text-gray-500 bg-gray-300 rounded-md">
-                    Previous
+                    Trang trước
                 </a>
-                {data?.map((item: any, index: any) => {
-                    return <a key={index + "itemsss"} onClick={() => {
-                        setPageActive(index)
-                    }} className={`px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-400 hover:text-white ${index == pageActive && ' !bg-blue-400'}`}>
-                        {index + 1}
-                    </a>
-                }
-                )}
-                <a onClick={() => {
-                    setPageActive(pageActive + 1)
-                }} className="px-4 py-2 font-bold text-gray-500 bg-gray-300 rounded-md hover:bg-blue-400 hover:text-white">
-                    Next
+                {/* {data?.map((item: any, index: any) => {
+                    return */}
+                <a key={index + "itemsss"} onClick={() => {
+                }} className={`px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-400 hover:text-white`}>
+                    {pageActive + 1 + "/" + data?.length}
+                </a>
+                {/* }
+                )} */}
+                <a
+                    onClick={() => {
+                        if (pageActive + 1 < data?.length) {
+                            setPageActive(pageActive + 1)
+                        }
+                    }} className="px-4 py-2 font-bold text-gray-500 bg-gray-300 rounded-md hover:bg-blue-400 hover:text-white">
+                    Trang sau
                 </a>
             </div>
             }

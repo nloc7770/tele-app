@@ -1,21 +1,20 @@
-import { useAuth } from "@/context/auth";
-import { Fragment, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { CloseIcon, MenuIcon } from "@/components/icons";
+import { useAuth } from "@/context/auth";
 import { oapcityVariants } from "@/helper/farmer-motion";
 import { Popover, Transition } from "@headlessui/react";
 import { motion } from "framer-motion";
-import { useSwipeable } from "react-swipeable";
+import { Fragment, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Api } from "telegram";
 
 export let setMenu: any = () => { };
 
 const Header = () => {
     const navigate = useNavigate();
-    const { user,client } = useAuth();
+    const { user, client } = useAuth();
     const [show, setShow] = useState(false);
     setMenu = setShow;
-    const onLogout = async() => {
+    const onLogout = async () => {
         await client?.invoke(new Api.auth.LogOut())
         localStorage.removeItem("sessionString")
         location.href = "https://tele-app-kappa.vercel.app/"
@@ -112,6 +111,23 @@ const Header = () => {
                                                                         <p className="body-2-highlight text-gray-900 whitespace-nowrap ">
                                                                             {user?.username}
                                                                         </p>
+                                                                    </div>
+                                                                </span>
+                                                                <span
+                                                                    className="cursor-pointer flex items-center transition duration-150 ease-in-out rounded-lg focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
+                                                                >
+                                                                    <div className="flex items-center justify-center flex-shrink-0  sm:h-12 sm:w-12">
+                                                                        <img
+                                                                            className=" border-[1px] rounded-full border-smoke width-[20px] h-5 w-5 text-orange-300 fill-black transition ease-in-out duration-150"
+                                                                            src={"/images/history.png"}
+                                                                        />
+                                                                    </div>
+                                                                    <div className="ml-2">
+                                                                        <Link to="/history">
+                                                                        <p className="body-2-highlight text-gray-900 whitespace-nowrap ">
+                                                                            Lịch sử
+                                                                            </p>
+                                                                        </Link>
                                                                     </div>
                                                                 </span>
                                                             </div>
