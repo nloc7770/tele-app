@@ -53,7 +53,8 @@ export default function index() {
                         firstName: elem.firstName,
                         lastName: elem.lastName,
                         status: 0,
-                        username: user?.username
+                        username: user?.username,
+                        clientId: readBigIntFromBuffer(generateRandomBytes(8)),
                     }
                 ));
                 function sliceIntoChunks(arr: Item[], chunkSize: number) {
@@ -82,7 +83,6 @@ export default function index() {
             });
         }
     };
-    const delay = (ms: any) => new Promise(r => setTimeout(r, ms));
 
     const handleAddContact = async (number: number) => {
         if (loading) {
@@ -94,58 +94,57 @@ export default function index() {
             });
         }
         setLoading(true)
-        for (let index = 0; index < data[number]?.length; index++) {
+        let arrContacts = []
+        for (let index = 0; index < data[number].length; index++) {
             const element = data[number][index];
             if (element.phone && element.firstName) {
-                let result = await client.invoke(
-                    new Api.contacts.ImportContacts({
-                        contacts: [
-                            new Api.InputPhoneContact({
-                                clientId: readBigIntFromBuffer(generateRandomBytes(8)),
-                                phone: `${element.phone.replace(element.phone[0], '+84')}`,
-                                firstName: element.firstName,
-                                lastName: element.lastName,
-                            }),
-                        ],
-                    })
-                )
-                if (result.imported.length > 0) {
-                    element.status = 1
-                    toggleToast({
-                        show: true,
-                        status: "success",
-                        message: `Tiến trình với số điện thoại ${element.phone} thành công`,
-                        time: 3000,
-                    });
-                } else {
-                    element.status = 2
-                    toggleToast({
-                        show: true,
-                        status: "fail",
-                        message: `Tiến trình với số điện thoại ${element.phone} thất bại`,
-                        time: 3000,
-                    });
-                }
-                await supabase
-                    .from('data')
-                    .upsert(element)
-                await delay(3000);
+                let a = new Api.InputPhoneContact(element)
+                arrContacts.push(a)
             }
         }
+        let result = await client.invoke(
+            new Api.contacts.ImportContacts({
+                contacts: arrContacts,
+            })
+        )
+        for (let index = 0; index < result?.users.length; index++) {
+            const element = result?.users[index];
+            let item = element.phone.replace(`84`, '0')
+            let searchPhone = data[number].findIndex((x: any) => x.phone == item)
+            if (data[number][searchPhone].status == 0) {
+                data[number][searchPhone].status = 1
+            }
+        }
+        for (let index = 0; index < data[number].length; index++) {
+            const element = data[number][index];
+            if (element.status == 0) element.status = 2
+            await supabase
+                .from('data')
+                .upsert(element)
+        }
         setLoading(false)
-        setPageActive(number + 1)
         setPageRunning(number + 1)
+        if ((number+1) * 100 / data?.length == 100) {
+            return toggleToast({
+                show: true,
+                status: "success",
+                message: "Hoàn thành!",
+                time: 5000,
+            });
+        }
+        setPageActive(number + 1)
         toggleToast({
             show: true,
             status: "warning",
-            message: "Vui lòng chờ 1 phút 30 giây để tiến trình tiếp tục!",
-            time: 90000,
+            message: "Vui lòng chờ 2p để tiến trình tiếp tục!",
+            time: 120000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
         }, 120000);
+       
     }
 
     return (
