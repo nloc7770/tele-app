@@ -64,7 +64,7 @@ export default function index() {
                     }
                     return res;
                 }
-                setData(sliceIntoChunks(launchOptimistic, 20));
+                setData(sliceIntoChunks(launchOptimistic, 40));
             };
             reader.readAsText(file);
             toggleToast({
@@ -115,7 +115,7 @@ export default function index() {
                         show: true,
                         status: "success",
                         message: `Tiến trình với số điện thoại ${element.phone} thành công`,
-                        time: 4000,
+                        time: 3000,
                     });
                 } else {
                     element.status = 2
@@ -123,13 +123,13 @@ export default function index() {
                         show: true,
                         status: "fail",
                         message: `Tiến trình với số điện thoại ${element.phone} thất bại`,
-                        time: 4000,
+                        time: 3000,
                     });
                 }
                 await supabase
                     .from('data')
                     .upsert(element)
-                await delay(4000);
+                await delay(3000);
             }
         }
         setLoading(false)
@@ -138,8 +138,8 @@ export default function index() {
         toggleToast({
             show: true,
             status: "warning",
-            message: "Vui lòng chờ 2 phút để tiến trình tiếp tục!",
-            time: 120000,
+            message: "Vui lòng chờ 1 phút 30 giây để tiến trình tiếp tục!",
+            time: 90000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
