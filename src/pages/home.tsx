@@ -48,6 +48,7 @@ export default function index() {
                 const parsedData = csv?.data;
                 const launchOptimistic = parsedData.map((elem: any, index: any) => (
                     {
+                        id: `${user?.username}${elem.phone}`,
                         index: index + 1,
                         phone: elem.phone,
                         firstName: elem.firstName,
@@ -136,14 +137,14 @@ export default function index() {
         toggleToast({
             show: true,
             status: "warning",
-            message: "Vui lòng chờ 2p để tiến trình tiếp tục!",
-            time: 120000,
+            message: "Vui lòng chờ 30 giây để tiến trình tiếp tục!",
+            time: 30000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
-        }, 120000);
+        }, 30000);
        
     }
 
