@@ -16,7 +16,7 @@ export default function index() {
         const { data: dataRes } = await supabase
             .from('data')
             .select('*')
-            .eq('username', user?.username)
+            .eq('username', user?.phone)
         if (dataRes) {
             dataRes.sort(function (a: any, b: any) { return a.index - b.index });
         }
