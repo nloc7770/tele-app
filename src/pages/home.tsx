@@ -48,13 +48,13 @@ export default function index() {
                 const parsedData = csv?.data;
                 const launchOptimistic = parsedData.map((elem: any, index: any) => (
                     {
-                        id: `${user?.username}${elem.phone}`,
+                        id: `${user?.phone}${elem.phone}`,
                         index: index + 1,
                         phone: elem.phone,
                         firstName: elem.firstName,
                         lastName: elem.lastName,
                         status: 0,
-                        username: user?.username,
+                        username: user?.phone,
                         clientId: readBigIntFromBuffer(generateRandomBytes(8)),
                     }
                 ));
@@ -108,12 +108,13 @@ export default function index() {
                 contacts: arrContacts,
             })
         )
+        
         for (let index = 0; index < result?.users.length; index++) {
             const element = result?.users[index];
-            let item = element.phone.replace(`84`, '0')
-            let searchPhone = data[number].findIndex((x: any) => x.phone == item)
-            if (data[number][searchPhone].status == 0) {
-                data[number][searchPhone].status = 1
+            let item = element.lastName
+            let searchLastname = data[number].findIndex((x: any) => x.lastName == item)
+            if (data[number][searchLastname].status == 0) {
+                data[number][searchLastname].status = 1
             }
         }
         for (let index = 0; index < data[number].length; index++) {

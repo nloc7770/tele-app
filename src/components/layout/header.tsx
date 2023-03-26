@@ -82,7 +82,7 @@ const Header = () => {
                                                         src={"/images/avatar-icon.png"}
                                                     />
                                                     <span className="hidden md:block body-2-highlight max-w-[13rem] truncate">
-                                                        {user?.username}
+                                                        {user?.phone}
                                                     </span>
                                                     <img src="/images/chevron-black-down.png" className="w-[24px] ml-[6px]"></img>
                                                 </Popover.Button>
@@ -109,7 +109,7 @@ const Header = () => {
                                                                     </div>
                                                                     <div className="ml-2">
                                                                         <p className="body-2-highlight text-gray-900 whitespace-nowrap ">
-                                                                            {user?.username}
+                                                                            {user?.phone}
                                                                         </p>
                                                                     </div>
                                                                 </span>
