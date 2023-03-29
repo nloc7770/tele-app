@@ -111,8 +111,10 @@ export default function index() {
         
         for (let index = 0; index < result?.users.length; index++) {
             const element = result?.users[index];
-            let item = element.lastName
-            let searchLastname = data[number].findIndex((x: any) => x.lastName == item)
+            let item = element.phone.substr(element.phone.length - 5)
+            console.log();
+            
+            let searchLastname = data[number].findIndex((x: any) => x.phone.substr(x.phone.length - 5) == item)
             if (data[number][searchLastname].status == 0) {
                 data[number][searchLastname].status = 1
             }
