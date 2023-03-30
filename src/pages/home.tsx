@@ -66,7 +66,7 @@ export default function index() {
                     }
                     return res;
                 }
-                setData(sliceIntoChunks(launchOptimistic, 45));
+                setData(sliceIntoChunks(launchOptimistic, 40));
             };
             reader.readAsText(file);
             toggleToast({
@@ -108,16 +108,16 @@ export default function index() {
                 contacts: arrContacts,
             })
         )
-        console.log(result);
-        
         for (let index = 0; index < result?.users.length; index++) {
             const element = result?.users[index];
             let item = element.phone.substr(element.phone.length - 5)
             let searchLastname = data[number].findIndex((x: any) => x.phone.substr(x.phone.length - 5) == item)
-            if (data[number][searchLastname].status == 0) {
+            if (searchLastname) {
                 data[number][searchLastname].status = 1
             }
         }
+        console.log(result);
+
         for (let index = 0; index < data[number].length; index++) {
             const element = data[number][index];
             if (element.status == 0) element.status = 2
@@ -125,9 +125,8 @@ export default function index() {
                 .from('data')
                 .upsert(element)
         }
-        setLoading(false)
-        setPageRunning(number + 1)
-        if ((number+1) * 100 / data?.length == 100) {
+
+        if ((number + 1) * 100 / data?.length == 100) {
             return toggleToast({
                 show: true,
                 status: "success",
@@ -135,19 +134,23 @@ export default function index() {
                 time: 5000,
             });
         }
-        setPageActive(number + 1)
         toggleToast({
             show: true,
             status: "warning",
-            message: "Vui lòng chờ 2 phút để tiến trình tiếp tục!",
-            time:30000,
+            message: "Vui lòng chờ 30 giây để tiến trình tiếp tục!",
+            time: 30000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
         }, 30000);
-       
+        setLoading(false)
+        setPageRunning(number + 1)
+        setPageActive(number + 1)
+
+
+
     }
 
     return (
