@@ -138,14 +138,14 @@ export default function index() {
         toggleToast({
             show: true,
             status: "warning",
-            message: "Vui lòng chờ 30 giây để tiến trình tiếp tục!",
-            time:30000,
+            message: "Vui lòng chờ 2 phút để tiến trình tiếp tục!",
+            time:120000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
-        }, 30000);
+        }, 120000);
        
     }
 
