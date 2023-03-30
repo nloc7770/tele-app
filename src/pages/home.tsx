@@ -139,13 +139,13 @@ export default function index() {
             show: true,
             status: "warning",
             message: "Vui lòng chờ 2 phút để tiến trình tiếp tục!",
-            time:120000,
+            time:30000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
-        }, 120000);
+        }, 30000);
        
     }
 
