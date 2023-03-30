@@ -108,6 +108,7 @@ export default function index() {
                 contacts: arrContacts,
             })
         )
+        console.log(result);
         
         for (let index = 0; index < result?.users.length; index++) {
             const element = result?.users[index];
