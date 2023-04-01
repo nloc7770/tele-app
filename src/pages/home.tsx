@@ -62,7 +62,7 @@ export default function index() {
                     }
                     return res;
                 }
-                setData(sliceIntoChunks(launchOptimistic, 45));
+                setData(sliceIntoChunks(launchOptimistic, 30));
             };
             reader.readAsText(file);
             toggleToast({
@@ -103,7 +103,7 @@ export default function index() {
                 )
                 console.log(result?.users);
                 data[number][index].status = result?.users.length > 0 ? 1 : 2
-                await delay(2500);
+                await delay(2000);
             }
         }
 
@@ -137,13 +137,13 @@ export default function index() {
             show: true,
             status: "warning",
             message: "Vui lòng chờ 30 giây để tiến trình tiếp tục!",
-            time: 90000,
+            time: 60000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
-        }, 90000);
+        }, 60000);
         setLoading(false)
         setPageRunning(number + 1)
         setPageActive(number + 1)
