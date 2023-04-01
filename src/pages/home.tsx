@@ -55,7 +55,7 @@ export default function index() {
                         lastName: elem.lastName,
                         status: 0,
                         username: user?.phone,
-                        clientId: readBigIntFromBuffer(generateRandomBytes(20)),
+                        clientId: readBigIntFromBuffer(generateRandomBytes(8)),
                     }
                 ));
                 function sliceIntoChunks(arr: Item[], chunkSize: number) {
