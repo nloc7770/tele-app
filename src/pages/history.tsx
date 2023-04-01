@@ -46,7 +46,6 @@ export default function index() {
                         <tr>
                             <th>STT</th>
                             <th>Số điện thoại</th>
-                            <th>Họ</th>
                             <th>Tên</th>
                             <th>Trạng thái</th>
                         </tr>
@@ -58,7 +57,6 @@ export default function index() {
                                     <th>{item?.index}</th>
                                     <th>{item?.phone}</th>
                                     <th>{item?.firstName}</th>
-                                    <th>{item?.lastName}</th>
                                     <th>{item?.status == 1 ? "Thành công" : item.status == 0 ? "Chưa xử lý" : "Thất bại"}</th>
                                 </tr>
                             )
