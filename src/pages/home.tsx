@@ -188,7 +188,6 @@ export default function index() {
                         <tr>
                             <th>STT</th>
                             <th>Số điện thoại</th>
-                            <th>Họ</th>
                             <th>Tên</th>
                             <th>Trạng thái</th>
                         </tr>
