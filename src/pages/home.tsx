@@ -92,7 +92,6 @@ export default function index() {
             });
         }
         setLoading(true)
-        let arrContacts = []
         for (let index = 0; index < data[number].length; index++) {
             const element = data[number][index];
             if (element.phone && element.firstName) {
@@ -103,6 +102,7 @@ export default function index() {
                     })
                 )
                 console.log(result?.users);
+                data[number][index].status = result?.users ? 1 : 2
                 await delay(1500);
             }
         }
@@ -191,7 +191,7 @@ export default function index() {
                             <th>Số điện thoại</th>
                             <th>Họ</th>
                             <th>Tên</th>
-                            {/* <th>Trạng thái</th> */}
+                            <th>Trạng thái</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -202,7 +202,7 @@ export default function index() {
                                     <th>{item?.phone}</th>
                                     <th>{item?.firstName}</th>
                                     <th>{item?.lastName}</th>
-                                    {/* <th>{item?.status == 1 ? "Thành công" : item.status == 0 ? "Chưa xử lý" : "Thất bại"}</th> */}
+                                    <th>{item?.status == 1 ? "Thành công" : item.status == 0 ? "Chưa xử lý" : "Thất bại"}</th>
                                 </tr>
                             )
                         }
