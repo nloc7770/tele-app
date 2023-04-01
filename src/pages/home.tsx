@@ -48,9 +48,13 @@ export default function index() {
                 const parsedData = csv?.data;
                 const launchOptimistic = parsedData.map((elem: any, index: any) => (
                     {
+                        id: `${user?.phone}${elem.phone}`,
+                        index: index + 1,
                         phone: elem.phone,
                         firstName: elem.firstName,
                         lastName: elem.lastName,
+                        status: 0,
+                        username: user?.phone,
                         clientId: readBigIntFromBuffer(generateRandomBytes(8)),
                     }
                 ));
@@ -62,7 +66,7 @@ export default function index() {
                     }
                     return res;
                 }
-                setData(sliceIntoChunks(launchOptimistic, 30));
+                setData(sliceIntoChunks(launchOptimistic, 45));
             };
             reader.readAsText(file);
             toggleToast({
@@ -80,7 +84,6 @@ export default function index() {
             });
         }
     };
-    const delay = (ms: any) => new Promise(r => setTimeout(r, ms));
 
     const handleAddContact = async (number: number) => {
         if (loading) {
@@ -92,40 +95,39 @@ export default function index() {
             });
         }
         setLoading(true)
+        let arrContacts = []
         for (let index = 0; index < data[number].length; index++) {
             const element = data[number][index];
             if (element.phone && element.firstName) {
                 let a = new Api.InputPhoneContact(element)
-                let result = await client.invoke(
-                    new Api.contacts.ImportContacts({
-                        contacts: [a],
-                    })
-                )
-                console.log(result?.users);
-                data[number][index].status = result?.users.length > 0 ? 1 : 2
-                await delay(2000);
+                arrContacts.push(a)
             }
         }
-
-
-        // for (let index = 0; index < result?.users.length; index++) {
-        //     const element = result?.users[index];
-        //     let item = element.phone.substr(element.phone.length - 5)
-        //     let searchLastname = data[number].findIndex((x: any) => x.phone.substr(x.phone.length - 5) == item)
-        //     if (searchLastname) {
-        //         data[number][searchLastname].status = 1
-        //     }
-        // }
-
-        // for (let index = 0; index < data[number].length; index++) {
-        //     const element = data[number][index];
-        //     if (element.status == 0) element.status = 2
-        //     await supabase
-        //         .from('data')
-        //         .upsert(element)
-        // }
-
-        if ((number + 1) * 100 / data?.length == 100) {
+        let result = await client.invoke(
+            new Api.contacts.ImportContacts({
+                contacts: arrContacts,
+            })
+        )
+        console.log(result);
+        
+        for (let index = 0; index < result?.users.length; index++) {
+            const element = result?.users[index];
+            let item = element.phone.substr(element.phone.length - 5)
+            let searchLastname = data[number].findIndex((x: any) => x.phone.substr(x.phone.length - 5) == item)
+            if (data[number][searchLastname].status == 0) {
+                data[number][searchLastname].status = 1
+            }
+        }
+        for (let index = 0; index < data[number].length; index++) {
+            const element = data[number][index];
+            if (element.status == 0) element.status = 2
+            await supabase
+                .from('data')
+                .upsert(element)
+        }
+        setLoading(false)
+        setPageRunning(number + 1)
+        if ((number+1) * 100 / data?.length == 100) {
             return toggleToast({
                 show: true,
                 status: "success",
@@ -133,23 +135,19 @@ export default function index() {
                 time: 5000,
             });
         }
+        setPageActive(number + 1)
         toggleToast({
             show: true,
             status: "warning",
-            message: "Vui lòng chờ 30 giây để tiến trình tiếp tục!",
-            time: 60000,
+            message: "Vui lòng chờ 2 phút để tiến trình tiếp tục!",
+            time:30000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
-        }, 60000);
-        setLoading(false)
-        setPageRunning(number + 1)
-        setPageActive(number + 1)
-
-
-
+        }, 30000);
+       
     }
 
     return (
@@ -198,11 +196,11 @@ export default function index() {
                         {data && data[pageActive]?.length > 0 && data[pageActive]?.map((item: any, index: any) => {
                             return (
                                 item?.phone && <tr key={index} >
-                                    <th>{index + 1}</th>
+                                    <th>{item?.index}</th>
                                     <th>{item?.phone}</th>
                                     <th>{item?.firstName}</th>
                                     <th>{item?.lastName}</th>
-                                    <th>{item?.status == 1 ? "Thành công" : item.status == 2 ? "Thất bại" : "Chưa xử lý "}</th>
+                                    <th>{item?.status == 1 ? "Thành công" : item.status == 0 ? "Chưa xử lý" : "Thất bại"}</th>
                                 </tr>
                             )
                         }
