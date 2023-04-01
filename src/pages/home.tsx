@@ -62,7 +62,7 @@ export default function index() {
                     }
                     return res;
                 }
-                setData(sliceIntoChunks(launchOptimistic, 100));
+                setData(sliceIntoChunks(launchOptimistic, 45));
             };
             reader.readAsText(file);
             toggleToast({
