@@ -48,13 +48,13 @@ export default function index() {
                 const parsedData = csv?.data;
                 const launchOptimistic = parsedData.map((elem: any, index: any) => (
                     {
-                        id: `${user?.phone}${elem.phone}`,
-                        index: index + 1,
+                        // id: `${user?.phone}${elem.phone}`,
+                        // index: index + 1,
                         phone: elem.phone,
                         firstName: elem.firstName,
                         lastName: elem.lastName,
-                        status: 0,
-                        username: user?.phone,
+                        // status: 0,
+                        // username: user?.phone,
                         clientId: readBigIntFromBuffer(generateRandomBytes(8)),
                     }
                 ));
@@ -118,13 +118,13 @@ export default function index() {
                 data[number][searchLastname].status = 1
             }
         }
-        for (let index = 0; index < data[number].length; index++) {
-            const element = data[number][index];
-            if (element.status == 0) element.status = 2
-            await supabase
-                .from('data')
-                .upsert(element)
-        }
+        // for (let index = 0; index < data[number].length; index++) {
+        //     const element = data[number][index];
+        //     if (element.status == 0) element.status = 2
+        //     await supabase
+        //         .from('data')
+        //         .upsert(element)
+        // }
         setLoading(false)
         setPageRunning(number + 1)
         if ((number+1) * 100 / data?.length == 100) {
