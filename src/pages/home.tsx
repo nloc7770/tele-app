@@ -102,7 +102,7 @@ export default function index() {
                     })
                 )
                 console.log(result?.users);
-                data[number][index].status = result?.users ? 1 : 2
+                data[number][index].status = result?.users.length > 0 ? 1 : 2
                 await delay(1500);
             }
         }
