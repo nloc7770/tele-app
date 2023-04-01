@@ -48,13 +48,9 @@ export default function index() {
                 const parsedData = csv?.data;
                 const launchOptimistic = parsedData.map((elem: any, index: any) => (
                     {
-                        id: `${user?.phone}${elem.phone}`,
-                        index: index + 1,
                         phone: elem.phone,
                         firstName: elem.firstName,
                         lastName: elem.lastName,
-                        status: 0,
-                        username: user?.phone,
                         clientId: readBigIntFromBuffer(generateRandomBytes(8)),
                     }
                 ));
@@ -108,23 +104,24 @@ export default function index() {
                 contacts: arrContacts,
             })
         )
-        for (let index = 0; index < result?.users.length; index++) {
-            const element = result?.users[index];
-            let item = element.phone.substr(element.phone.length - 5)
-            let searchLastname = data[number].findIndex((x: any) => x.phone.substr(x.phone.length - 5) == item)
-            if (searchLastname) {
-                data[number][searchLastname].status = 1
-            }
-        }
         console.log(result);
+        
+        // for (let index = 0; index < result?.users.length; index++) {
+        //     const element = result?.users[index];
+        //     let item = element.phone.substr(element.phone.length - 5)
+        //     let searchLastname = data[number].findIndex((x: any) => x.phone.substr(x.phone.length - 5) == item)
+        //     if (searchLastname) {
+        //         data[number][searchLastname].status = 1
+        //     }
+        // }
 
-        for (let index = 0; index < data[number].length; index++) {
-            const element = data[number][index];
-            if (element.status == 0) element.status = 2
-            await supabase
-                .from('data')
-                .upsert(element)
-        }
+        // for (let index = 0; index < data[number].length; index++) {
+        //     const element = data[number][index];
+        //     if (element.status == 0) element.status = 2
+        //     await supabase
+        //         .from('data')
+        //         .upsert(element)
+        // }
 
         if ((number + 1) * 100 / data?.length == 100) {
             return toggleToast({
@@ -192,18 +189,18 @@ export default function index() {
                             <th>Số điện thoại</th>
                             <th>Họ</th>
                             <th>Tên</th>
-                            <th>Trạng thái</th>
+                            {/* <th>Trạng thái</th> */}
                         </tr>
                     </thead>
                     <tbody>
                         {data && data[pageActive]?.length > 0 && data[pageActive]?.map((item: any, index: any) => {
                             return (
                                 item?.phone && <tr key={index} >
-                                    <th>{item?.index}</th>
+                                    <th>{index+1}</th>
                                     <th>{item?.phone}</th>
                                     <th>{item?.firstName}</th>
                                     <th>{item?.lastName}</th>
-                                    <th>{item?.status == 1 ? "Thành công" : item.status == 0 ? "Chưa xử lý" : "Thất bại"}</th>
+                                    {/* <th>{item?.status == 1 ? "Thành công" : item.status == 0 ? "Chưa xử lý" : "Thất bại"}</th> */}
                                 </tr>
                             )
                         }
