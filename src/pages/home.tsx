@@ -139,7 +139,7 @@ export default function index() {
         toggleToast({
             show: true,
             status: "warning",
-            message: "Vui lòng chờ 2 phút để tiến trình tiếp tục!",
+            message: "Vui lòng chờ 30S phút để tiến trình tiếp tục!",
             time:30000,
         });
         setTimeout(async () => {
