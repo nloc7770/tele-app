@@ -135,13 +135,13 @@ export default function index() {
             show: true,
             status: "warning",
             message: "Vui lòng chờ 30 giây để tiến trình tiếp tục!",
-            time: 30000,
+            time: 60000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
-        }, 30000);
+        }, 60000);
         setLoading(false)
         setPageRunning(number + 1)
         setPageActive(number + 1)
