@@ -52,6 +52,7 @@ export default function index() {
                         index: index + 1,
                         phone: elem.phone,
                         firstName: elem.firstName,
+                        lastName: elem.lastName,
                         status: 0,
                         username: user?.phone,
                         clientId: readBigIntFromBuffer(generateRandomBytes(8)),
@@ -115,6 +116,7 @@ export default function index() {
                 data[number][searchLastname].status = 1
             }
         }
+        console.log(result);
 
         for (let index = 0; index < data[number].length; index++) {
             const element = data[number][index];
@@ -188,6 +190,7 @@ export default function index() {
                         <tr>
                             <th>STT</th>
                             <th>Số điện thoại</th>
+                            <th>Họ</th>
                             <th>Tên</th>
                             <th>Trạng thái</th>
                         </tr>
@@ -199,6 +202,7 @@ export default function index() {
                                     <th>{item?.index}</th>
                                     <th>{item?.phone}</th>
                                     <th>{item?.firstName}</th>
+                                    <th>{item?.lastName}</th>
                                     <th>{item?.status == 1 ? "Thành công" : item.status == 0 ? "Chưa xử lý" : "Thất bại"}</th>
                                 </tr>
                             )
