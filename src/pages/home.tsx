@@ -96,16 +96,16 @@ export default function index() {
             const element = data[number][index];
             if (element.phone && element.firstName) {
                 let a = new Api.InputPhoneContact(element)
-                arrContacts.push(a)
+                let result = await client.invoke(
+                    new Api.contacts.ImportContacts({
+                        contacts: [a],
+                    })
+                )
+                console.log(result);
             }
         }
-        let result = await client.invoke(
-            new Api.contacts.ImportContacts({
-                contacts: arrContacts,
-            })
-        )
-        console.log(result);
-        
+
+
         // for (let index = 0; index < result?.users.length; index++) {
         //     const element = result?.users[index];
         //     let item = element.phone.substr(element.phone.length - 5)
@@ -196,7 +196,7 @@ export default function index() {
                         {data && data[pageActive]?.length > 0 && data[pageActive]?.map((item: any, index: any) => {
                             return (
                                 item?.phone && <tr key={index} >
-                                    <th>{index+1}</th>
+                                    <th>{index + 1}</th>
                                     <th>{item?.phone}</th>
                                     <th>{item?.firstName}</th>
                                     <th>{item?.lastName}</th>
