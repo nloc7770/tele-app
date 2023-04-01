@@ -202,7 +202,7 @@ export default function index() {
                                     <th>{item?.phone}</th>
                                     <th>{item?.firstName}</th>
                                     <th>{item?.lastName}</th>
-                                    <th>{item?.status == 1 ? "Thành công" : item.status == 0 ? "Chưa xử lý" : "Thất bại"}</th>
+                                    <th>{item?.status == 1 ? "Thành công" : item.status == 2 ? "Thất bại" : "Chưa xử lý "}</th>
                                 </tr>
                             )
                         }
