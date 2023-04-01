@@ -62,7 +62,7 @@ export default function index() {
                     }
                     return res;
                 }
-                setData(sliceIntoChunks(launchOptimistic, 30));
+                setData(sliceIntoChunks(launchOptimistic, 100));
             };
             reader.readAsText(file);
             toggleToast({
@@ -137,13 +137,13 @@ export default function index() {
             show: true,
             status: "warning",
             message: "Vui lòng chờ 30 giây để tiến trình tiếp tục!",
-            time: 10000,
+            time: 30000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
-        }, 10000);
+        }, 30000);
         setLoading(false)
         setPageRunning(number + 1)
         setPageActive(number + 1)
