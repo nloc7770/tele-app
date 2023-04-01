@@ -80,6 +80,7 @@ export default function index() {
             });
         }
     };
+    const delay = (ms: any) => new Promise(r => setTimeout(r, ms));
 
     const handleAddContact = async (number: number) => {
         if (loading) {
@@ -101,7 +102,8 @@ export default function index() {
                         contacts: [a],
                     })
                 )
-                console.log(result);
+                console.log(result?.users);
+                await delay(1500);
             }
         }
 
@@ -135,13 +137,13 @@ export default function index() {
             show: true,
             status: "warning",
             message: "Vui lòng chờ 30 giây để tiến trình tiếp tục!",
-            time: 60000,
+            time: 10000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
-        }, 60000);
+        }, 10000);
         setLoading(false)
         setPageRunning(number + 1)
         setPageActive(number + 1)
