@@ -11,6 +11,7 @@
   "dependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "@futpib/telegram-browser": "^2.9.4-dev.1",
     "@headlessui/react": "^1.7.13",
     "@supabase/supabase-js": "^2.11.0",
     "@types/papaparse": "^5.3.7",
