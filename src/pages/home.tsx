@@ -48,13 +48,13 @@ export default function index() {
                 const parsedData = csv?.data;
                 const launchOptimistic = parsedData.map((elem: any, index: any) => (
                     {
-                        // id: `${user?.phone}${elem.phone}`,
-                        // index: index + 1,
+                        id: `${user?.phone}${elem.phone}`,
+                        index: index + 1,
                         phone: elem.phone,
                         firstName: elem.firstName,
                         lastName: elem.lastName,
-                        // status: 0,
-                        // username: user?.phone,
+                        status: 0,
+                        username: user?.phone,
                         clientId: readBigIntFromBuffer(generateRandomBytes(8)),
                     }
                 ));
@@ -66,7 +66,8 @@ export default function index() {
                     }
                     return res;
                 }
-                setData(sliceIntoChunks(launchOptimistic, 45));
+
+                setData(sliceIntoChunks(launchOptimistic, 1000));
             };
             reader.readAsText(file);
             toggleToast({
@@ -101,33 +102,41 @@ export default function index() {
             if (element.phone && element.firstName) {
                 let a = new Api.InputPhoneContact(element)
                 arrContacts.push(a)
+
             }
         }
-        let result = await client.invoke(
-            new Api.contacts.ImportContacts({
-                contacts: arrContacts,
-            })
-        )
-        console.log(result);
-        
-        for (let index = 0; index < result?.users.length; index++) {
-            const element = result?.users[index];
-            let item = element.phone.substr(element.phone.length - 5)
-            let searchLastname = data[number].findIndex((x: any) => x.phone.substr(x.phone.length - 5) == item)
-            if (data[number][searchLastname].status == 0) {
-                data[number][searchLastname].status = 1
+
+
+        (async function run() {
+            await client.connect(); // This assumes you have already authenticated with .start()
+
+            let result = await client.invoke(
+                new Api.contacts.ImportContacts({
+                    contacts: arrContacts,
+                })
+            )
+            
+            for (let index = 0; index < result?.users.length; index++) {
+                const element = result?.users[index];
+                let item = element.phone.substr(element.phone.length - 5)
+                let searchLastname = data[number].findIndex((x: any) => x.phone.substr(x.phone.length - 5) == item)
+                if (data[number][searchLastname].status == 0) {
+                    data[number][searchLastname].status = 1
+                }
             }
-        }
-        // for (let index = 0; index < data[number].length; index++) {
-        //     const element = data[number][index];
-        //     if (element.status == 0) element.status = 2
-        //     await supabase
-        //         .from('data')
-        //         .upsert(element)
-        // }
+            for (let index = 0; index < data[number].length; index++) {
+                const element = data[number][index];
+                if (element.status == 0) element.status = 2
+                await supabase
+                    .from('data')
+                    .upsert(element)
+            }
+
+        })();
+
         setLoading(false)
         setPageRunning(number + 1)
-        if ((number+1) * 100 / data?.length == 100) {
+        if ((number + 1) * 100 / data?.length == 100) {
             return toggleToast({
                 show: true,
                 status: "success",
@@ -139,15 +148,15 @@ export default function index() {
         toggleToast({
             show: true,
             status: "warning",
-            message: "Vui lòng chờ 30S phút để tiến trình tiếp tục!",
-            time:30000,
+            message: "Vui lòng chờ 1 phút để tiến trình tiếp tục!",
+            time: 60000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
-        }, 30000);
-       
+        }, 60000);
+
     }
 
     return (
