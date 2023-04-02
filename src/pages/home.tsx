@@ -66,7 +66,7 @@ export default function index() {
                     }
                     return res;
                 }
-                setData(sliceIntoChunks(launchOptimistic, 45));
+                setData(sliceIntoChunks(launchOptimistic, 500));
             };
             reader.readAsText(file);
             toggleToast({
@@ -140,13 +140,13 @@ export default function index() {
             show: true,
             status: "warning",
             message: "Vui lòng chờ 30S phút để tiến trình tiếp tục!",
-            time:30000,
+            time: 300000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
-        }, 30000);
+        }, 300000);
        
     }
 
