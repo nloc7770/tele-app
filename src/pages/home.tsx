@@ -1,8 +1,9 @@
 import { useAuth } from '@/context/auth';
 import { useToast } from '@/context/toast';
 import { supabase } from '@/services/supabase';
+import moment from 'moment';
 import Papa from "papaparse";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Api } from 'telegram';
 import { generateRandomBytes, readBigIntFromBuffer } from 'telegram/Helpers';
 type Item = {
@@ -22,9 +23,28 @@ export default function index() {
     // const [page, setPage] = useState([])
     const [pageActive, setPageActive] = useState<number>(0)
     const [pageRunning, setPageRunning] = useState<number>(0)
-
+    const [isImport, setIsImport] = useState<boolean>(false)
+    const init = async () => {
+        const { data: dataRes } = await supabase
+            .from('checking')
+            .select('*')
+            .eq('phone', user?.phone)
+            .gt('created_at', moment().format("YYYY-MM-DD"));
+        setIsImport(dataRes ? dataRes[0].is_import : false)
+    }
+    useEffect(() => {
+        init()
+    }, []);
     const handleOnChange = (e: any) => {
         try {
+            if (isImport) {
+                return toggleToast({
+                    show: true,
+                    status: "warning",
+                    message: "Hôm nay đã thêm liên hệ rồi",
+                    time: 5000,
+                });
+            }
             setPageActive(0)
             setPageRunning(0)
             const file = (e.target as HTMLInputElement)?.files?.[0]
@@ -96,6 +116,7 @@ export default function index() {
             });
         }
         setLoading(true)
+        await supabase.from('checking').upsert({ phone: user?.phone, is_import: true })
         let arrContacts = []
         for (let index = 0; index < data[number].length; index++) {
             const element = data[number][index];
@@ -115,7 +136,6 @@ export default function index() {
                     contacts: arrContacts,
                 })
             )
-            console.log(result)
             for (let index = 0; index < result?.users.length; index++) {
                 const element = result?.users[index];
                 let item = element.phone.substr(element.phone.length - 5)
@@ -124,25 +144,20 @@ export default function index() {
                     data[number][searchLastname].status = 1
                 }
             }
-            for (let index = 0; index < data[number].length; index++) {
-                const element = data[number][index];
-                if (element.status == 0) element.status = 2
-                await supabase
-                    .from('data')
-                    .upsert(element)
-            }
-
         })();
 
         setLoading(false)
         setPageRunning(number + 1)
         if ((number + 1) * 100 / data?.length == 100) {
-            return toggleToast({
+            toggleToast({
                 show: true,
                 status: "success",
                 message: "Hoàn thành!",
                 time: 5000,
             });
+            return setTimeout(() => {
+                location.reload()
+            }, 7000);
         }
         setPageActive(number + 1)
         toggleToast({
@@ -167,6 +182,7 @@ export default function index() {
                 <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${pageRunning * 100 / data?.length}%` }}>{(pageRunning * 100 / data?.length).toFixed(2)}%</div>
             </div>}
             <div className='my-5 self-end flex'>
+
                 <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer ">
                     <input
                         onChange={
