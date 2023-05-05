@@ -24,7 +24,13 @@ export default function index() {
     const [pageActive, setPageActive] = useState<number>(0)
     const [pageRunning, setPageRunning] = useState<number>(0)
     const [isImport, setIsImport] = useState<boolean>(false)
+    const [totalData, setTotalData] = useState<number>(0);
+
     const init = async () => {
+        const result = await client.invoke(
+            new Api.contacts.GetContacts({})
+        );
+        setTotalData(result.originalArgs.users.length)
         const { data: dataRes } = await supabase
             .from('checking')
             .select('*')
@@ -37,11 +43,11 @@ export default function index() {
     }, []);
     const handleOnChange = (e: any) => {
         try {
-            if (isImport) {
+            if (isImport && totalData > 2800) {
                 return toggleToast({
                     show: true,
                     status: "warning",
-                    message: "Hôm nay đã thêm liên hệ rồi",
+                    message: "Đạt giới hạn thêm liên hệ.",
                     time: 5000,
                 });
             }
@@ -182,7 +188,12 @@ export default function index() {
                 <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${pageRunning * 100 / data?.length}%` }}>{(pageRunning * 100 / data?.length).toFixed(2)}%</div>
             </div>}
             <div className='my-5 self-end flex'>
-
+                <label className="p-3 border-2 rounded-lg mr-2 cursor-pointer ">
+                    <div
+                    >
+                        Tổng số liên hệ đã thêm : {totalData}
+                    </div>
+                </label>
                 <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer ">
                     <input
                         onChange={
