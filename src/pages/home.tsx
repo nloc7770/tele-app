@@ -1,8 +1,9 @@
 import { useAuth } from '@/context/auth';
 import { useToast } from '@/context/toast';
 import { supabase } from '@/services/supabase';
+import moment from 'moment';
 import Papa from "papaparse";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Api } from 'telegram';
 import { generateRandomBytes, readBigIntFromBuffer } from 'telegram/Helpers';
 type Item = {
@@ -22,9 +23,34 @@ export default function index() {
     // const [page, setPage] = useState([])
     const [pageActive, setPageActive] = useState<number>(0)
     const [pageRunning, setPageRunning] = useState<number>(0)
+    const [isImport, setIsImport] = useState<boolean>(false)
+    const [totalData, setTotalData] = useState<number>(0);
 
+    const init = async () => {
+        const result = await client.invoke(
+            new Api.contacts.GetContacts({})
+        );
+        setTotalData(result.originalArgs.users.length)
+        const { data: dataRes } = await supabase
+            .from('checking')
+            .select('*')
+            .eq('phone', user?.phone)
+            .gt('created_at', moment().format("YYYY-MM-DD"));
+        setIsImport(dataRes ? dataRes[0].is_import : false)
+    }
+    useEffect(() => {
+        init()
+    }, []);
     const handleOnChange = (e: any) => {
         try {
+            if (isImport && totalData > 2800) {
+                return toggleToast({
+                    show: true,
+                    status: "warning",
+                    message: "Đạt giới hạn thêm liên hệ.",
+                    time: 5000,
+                });
+            }
             setPageActive(0)
             setPageRunning(0)
             const file = (e.target as HTMLInputElement)?.files?.[0]
@@ -48,13 +74,13 @@ export default function index() {
                 const parsedData = csv?.data;
                 const launchOptimistic = parsedData.map((elem: any, index: any) => (
                     {
-                        // id: `${user?.phone}${elem.phone}`,
-                        // index: index + 1,
+                        id: `${user?.phone}${elem.phone}`,
+                        index: index + 1,
                         phone: elem.phone,
                         firstName: elem.firstName,
                         lastName: elem.lastName,
-                        // status: 0,
-                        // username: user?.phone,
+                        status: 0,
+                        username: user?.phone,
                         clientId: readBigIntFromBuffer(generateRandomBytes(8)),
                     }
                 ));
@@ -66,7 +92,8 @@ export default function index() {
                     }
                     return res;
                 }
-                setData(sliceIntoChunks(launchOptimistic, 500));
+
+                setData(sliceIntoChunks(launchOptimistic, 1000));
             };
             reader.readAsText(file);
             toggleToast({
@@ -95,59 +122,62 @@ export default function index() {
             });
         }
         setLoading(true)
+        await supabase.from('checking').upsert({ phone: user?.phone, is_import: true })
         let arrContacts = []
         for (let index = 0; index < data[number].length; index++) {
             const element = data[number][index];
             if (element.phone && element.firstName) {
                 let a = new Api.InputPhoneContact(element)
                 arrContacts.push(a)
+
             }
         }
-        let result = await client.invoke(
-            new Api.contacts.ImportContacts({
-                contacts: arrContacts,
-            })
-        )
-        console.log(result);
-        
-        for (let index = 0; index < result?.users.length; index++) {
-            const element = result?.users[index];
-            let item = element.phone.substr(element.phone.length - 5)
-            let searchLastname = data[number].findIndex((x: any) => x.phone.substr(x.phone.length - 5) == item)
-            if (data[number][searchLastname].status == 0) {
-                data[number][searchLastname].status = 1
+
+
+        (async function run() {
+            await client.connect(); // This assumes you have already authenticated with .start()
+
+            let result = await client.invoke(
+                new Api.contacts.ImportContacts({
+                    contacts: arrContacts,
+                })
+            )
+            for (let index = 0; index < result?.users.length; index++) {
+                const element = result?.users[index];
+                let item = element.phone.substr(element.phone.length - 5)
+                let searchLastname = data[number].findIndex((x: any) => x.phone.substr(x.phone.length - 5) == item)
+                if (data[number][searchLastname].status == 0) {
+                    data[number][searchLastname].status = 1
+                }
             }
-        }
-        // for (let index = 0; index < data[number].length; index++) {
-        //     const element = data[number][index];
-        //     if (element.status == 0) element.status = 2
-        //     await supabase
-        //         .from('data')
-        //         .upsert(element)
-        // }
+        })();
+
         setLoading(false)
         setPageRunning(number + 1)
-        if ((number+1) * 100 / data?.length == 100) {
-            return toggleToast({
+        if ((number + 1) * 100 / data?.length == 100) {
+            toggleToast({
                 show: true,
                 status: "success",
                 message: "Hoàn thành!",
                 time: 5000,
             });
+            return setTimeout(() => {
+                location.reload()
+            }, 7000);
         }
         setPageActive(number + 1)
         toggleToast({
             show: true,
             status: "warning",
-            message: "Vui lòng chờ 30S phút để tiến trình tiếp tục!",
-            time: 300000,
+            message: "Vui lòng chờ 1 phút để tiến trình tiếp tục!",
+            time: 60000,
         });
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
-        }, 300000);
-       
+        }, 60000);
+
     }
 
     return (
@@ -158,6 +188,12 @@ export default function index() {
                 <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${pageRunning * 100 / data?.length}%` }}>{(pageRunning * 100 / data?.length).toFixed(2)}%</div>
             </div>}
             <div className='my-5 self-end flex'>
+                <label className="p-3 border-2 rounded-lg mr-2 cursor-pointer ">
+                    <div
+                    >
+                        Tổng số liên hệ đã thêm : {totalData}
+                    </div>
+                </label>
                 <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer ">
                     <input
                         onChange={
