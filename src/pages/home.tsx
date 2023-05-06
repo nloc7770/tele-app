@@ -38,11 +38,11 @@ export default function index() {
             .eq('phone', user?.phone)
             .gt('created_at', moment().format("YYYY-MM-DD"));
         setIsImport((dataRes && dataRes.length > 0) ? dataRes[0].is_import : false)
-        const { data: dataLock } = await supabase
-            .from('key')
-            .select('*')
-            .eq('phone', user?.phone)
-        setIsActive((dataLock && dataLock.length > 0) ? dataLock[0].is_active : false)
+        // const { data: dataLock } = await supabase
+        //     .from('key')
+        //     .select('*')
+        //     .eq('phone', user?.phone)
+        // setIsActive((dataLock && dataLock.length > 0) ? dataLock[0].is_active : false)
     }
     useEffect(() => {
         init()
