@@ -42,7 +42,22 @@ export default function index() {
         //     .from('key')
         //     .select('*')
         //     .eq('phone', user?.phone)
-        // setIsActive((dataLock && dataLock.length > 0) ? dataLock[0].is_active : false)
+        // if (!(dataLock && dataLock.length > 0)) {
+        //     setIsActive(false)
+        // }
+        // let emailUser = dataLock && dataLock[0].user
+        // const { data: dataCheck } = await supabase
+        //     .from("user")
+        //     .select("*")
+        //     .eq("username", emailUser);
+        // if ((dataCheck && dataCheck.length > 0)) {
+        //     if (!dataCheck[0].active) {
+        //         return setIsActive(false);
+        //     }
+        //     if (moment().isAfter(dataCheck[0].active)) {
+        //         return setIsActive(false);
+        //     }
+        // }
     }
     useEffect(() => {
         init()
@@ -278,7 +293,7 @@ export default function index() {
                         Trang sau
                     </a>
                 </div>
-                }</> : <p>Tài khoản bị khóa</p>}
+                }</> : <p>Tài khoản bị khóa hoặc hết hạn</p>}
         </div>
 
     )
