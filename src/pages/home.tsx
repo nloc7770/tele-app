@@ -54,7 +54,7 @@ export default function index() {
         //     if (!dataCheck[0].active) {
         //         return setIsActive(false);
         //     }
-        //     if (moment().isAfter(dataCheck[0].active)) {
+        //     if (moment().isAfter(dataCheck[0].expire_at)) {
         //         return setIsActive(false);
         //     }
         // }
