@@ -38,26 +38,26 @@ export default function index() {
             .eq('phone', user?.phone)
             .gt('created_at', moment().format("YYYY-MM-DD"));
         setIsImport((dataRes && dataRes.length > 0) ? dataRes[0].is_import : false)
-        // const { data: dataLock } = await supabase
-        //     .from('key')
-        //     .select('*')
-        //     .eq('phone', user?.phone)
-        // if (!(dataLock && dataLock.length > 0)) {
-        //     setIsActive(false)
-        // }
-        // let emailUser = dataLock && dataLock[0].user
-        // const { data: dataCheck } = await supabase
-        //     .from("user")
-        //     .select("*")
-        //     .eq("username", emailUser);
-        // if ((dataCheck && dataCheck.length > 0)) {
-        //     if (!dataCheck[0].active) {
-        //         return setIsActive(false);
-        //     }
-        //     if (moment().isAfter(dataCheck[0].expire_at)) {
-        //         return setIsActive(false);
-        //     }
-        // }
+        const { data: dataLock } = await supabase
+            .from('key')
+            .select('*')
+            .eq('phone', user?.phone)
+        if (!(dataLock && dataLock.length > 0)) {
+            setIsActive(false)
+        }
+        let emailUser = dataLock && dataLock[0].user
+        const { data: dataCheck } = await supabase
+            .from("user")
+            .select("*")
+            .eq("username", emailUser);
+        if ((dataCheck && dataCheck.length > 0)) {
+            if (!dataCheck[0].active) {
+                return setIsActive(false);
+            }
+            if (moment().isAfter(dataCheck[0].expire_at)) {
+                return setIsActive(false);
+            }
+        }
     }
     useEffect(() => {
         init()
