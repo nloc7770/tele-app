@@ -203,18 +203,21 @@ export default function index() {
 
     return (
         <div className='flex flex-col justify-center items-center w-full'>
-            {isActive ? <> <h1>Import tele-script </h1>
+            {isActive ? <> <p className='text-black text-4xl font-extrabol'>Import tele-script </p>
                 {data?.length > 0 && <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
                     <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${pageRunning * 100 / data?.length}%` }}>{(pageRunning * 100 / data?.length).toFixed(2)}%</div>
                 </div>}
                 <div className='my-5 self-end flex'>
-                    <label className="p-3 border-2 rounded-lg mr-2 cursor-pointer ">
+                    <label className="p-3 border-2 rounded-lg mr-2 cursor-pointer border-black">
                         <div
                         >
                             Tổng số liên hệ đã thêm : {totalData}
                         </div>
                     </label>
-                    <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer ">
+                    <a className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2" href='https://res.cloudinary.com/dfs1kb2dk/raw/upload/v1684045982/telegram_xcel/templet_add_account_tlrz93.csv'>
+                       Lấy file mẫu
+                    </a>
+                    <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2">
                         <input
                             onChange={
                                 handleOnChange
@@ -227,7 +230,8 @@ export default function index() {
 
                         Lấy danh sách liên hệ
                     </label>
-                    <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer ">
+
+                    <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black">
                         <div
                             onClick={() => {
                                 handleAddContact(0)
@@ -293,7 +297,7 @@ export default function index() {
                         Trang sau
                     </a>
                 </div>
-                }</> : <p>Tài khoản bị khóa hoặc hết hạn</p>}
+                }</> : <p className='text-black text-4xl font-extrabold'>Tài khoản bị khóa hoặc hết hạn</p>}
         </div>
 
     )

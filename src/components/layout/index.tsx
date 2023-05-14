@@ -28,7 +28,7 @@ export const PrivateRoute = () => {
             <AnimatePresence mode="wait" initial={false}>
               <div className="w-full bg-[#F7F7F7]">
                 <motion.div
-                  className="md:px-[32px] md:py-[40px] relative z-0 w-full mx-auto md:overflow-auto min-h-[calc(100vh-64px)]"
+                  className="md:px-[32px] md:py-[40px] relative z-0 w-full mx-auto md:overflow-auto min-h-[calc(100vh-64px)] bg-blue-50"
                   key={location.pathname}
                 >
                   {React.cloneElement(element as any, { key: location.pathname })}
