@@ -38,26 +38,26 @@ export default function index() {
             .eq('phone', user?.phone)
             .gt('created_at', moment().format("YYYY-MM-DD"));
         setIsImport((dataRes && dataRes.length > 0) ? dataRes[0].is_import : false)
-        const { data: dataLock } = await supabase
-            .from('key')
-            .select('*')
-            .eq('phone', user?.phone)
-        if (!(dataLock && dataLock.length > 0)) {
-            setIsActive(false)
-        }
-        let emailUser = dataLock && dataLock[0].user
-        const { data: dataCheck } = await supabase
-            .from("user")
-            .select("*")
-            .eq("username", emailUser);
-        if ((dataCheck && dataCheck.length > 0)) {
-            if (!dataCheck[0].active) {
-                return setIsActive(false);
-            }
-            if (moment().isAfter(dataCheck[0].expire_at)) {
-                return setIsActive(false);
-            }
-        }
+        // const { data: dataLock } = await supabase
+        //     .from('key')
+        //     .select('*')
+        //     .eq('phone', user?.phone)
+        // if (!(dataLock && dataLock.length > 0)) {
+        //     setIsActive(false)
+        // }
+        // let emailUser = dataLock && dataLock[0].user
+        // const { data: dataCheck } = await supabase
+        //     .from("user")
+        //     .select("*")
+        //     .eq("username", emailUser);
+        // if ((dataCheck && dataCheck.length > 0)) {
+        //     if (!dataCheck[0].active) {
+        //         return setIsActive(false);
+        //     }
+        //     if (moment().isAfter(dataCheck[0].expire_at)) {
+        //         return setIsActive(false);
+        //     }
+        // }
     }
     useEffect(() => {
         init()
@@ -215,7 +215,7 @@ export default function index() {
                         </div>
                     </label>
                     <a className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2" href='https://res.cloudinary.com/dfs1kb2dk/raw/upload/v1684045982/telegram_xcel/templet_add_account_tlrz93.csv'>
-                       Lấy file mẫu
+                        Lấy file mẫu
                     </a>
                     <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2">
                         <input
