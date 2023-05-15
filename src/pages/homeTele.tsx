@@ -70,6 +70,7 @@ export default function index() {
             // to read any file or blob.
             const reader = new FileReader();
 
+            
             // Event listener on reader when the file
             // loads, we parse it and set the data.
             reader.onload = async ({ target }: any) => {
