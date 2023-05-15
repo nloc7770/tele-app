@@ -70,7 +70,7 @@ export default function index() {
             // to read any file or blob.
             const reader = new FileReader();
 
-            
+
             // Event listener on reader when the file
             // loads, we parse it and set the data.
             reader.onload = async ({ target }: any) => {
@@ -196,13 +196,14 @@ export default function index() {
                 </div>}
                 <div className='my-5 justify-between flex w-full'>
                     <div className='flex flex-row'>
-                        <label className="p-3 border-2 rounded-lg mr-2 cursor-pointer border-black">
+                        <label className="p-3 border-2 rounded-lg mr-2 cursor-pointer border-black text-black">
                             <div
+                                className='text-black'
                             >
                                 Tổng số liên hệ đã thêm : {totalData}
                             </div>
                         </label>
-                        <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2">
+                        <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2 text-black">
                             <div
                                 onClick={() => {
                                     setIsHistory(!isHistory)
@@ -213,10 +214,10 @@ export default function index() {
                         </label>
                     </div>
                     {!isHistory && <div className='flex flex-row'>
-                        <a className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2" href='https://res.cloudinary.com/dfs1kb2dk/raw/upload/v1684045982/telegram_xcel/templet_add_account_tlrz93.csv'>
+                        <a className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2 text-black" href='https://res.cloudinary.com/dfs1kb2dk/raw/upload/v1684045982/telegram_xcel/templet_add_account_tlrz93.csv'>
                             Lấy file mẫu
                         </a>
-                        <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2">
+                        <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2 text-black">
                             <input
                                 onChange={
                                     handleOnChange
@@ -230,7 +231,7 @@ export default function index() {
                             Lấy danh sách liên hệ
                         </label>
 
-                        <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2">
+                        <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2 text-black">
                             <div
                                 onClick={() => {
                                     handleAddContact(0)
@@ -239,7 +240,7 @@ export default function index() {
                                 Thêm liên hệ
                             </div>
                         </label>
-                        <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black">
+                        <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black text-black">
                             <div
                                 onClick={() => {
                                     onLogout()
@@ -251,9 +252,9 @@ export default function index() {
                     </div>}
                 </div>
                 {isHistory ? <History /> : <div className="relative items-center block w-full p-6 bg-white border border-gray-100 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-800 dark:hover:bg-gray-700">
-                    <table className={`${loading && "opacity-20"}`}>
+                    <table className={`text-black ${loading && "opacity-20"}`}>
                         <thead>
-                            <tr>
+                            <tr >
                                 <th>STT</th>
                                 <th>Số điện thoại</th>
                                 <th>Họ</th>
