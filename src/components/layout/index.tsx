@@ -1,7 +1,6 @@
-import { useAuth } from "@/context/auth";
+import { useUserAuth } from "@/context/authUser";
 import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
-import { Fragment, lazy, Suspense } from "react";
+import React, { Fragment, lazy, Suspense } from "react";
 import { Navigate, Outlet, useLocation, useRoutes } from "react-router-dom";
 import Header from "./header";
 const HomePage = lazy(() => import("@/pages/home"));
@@ -9,16 +8,16 @@ const HistoryPage = lazy(() => import("@/pages/history"));
 
 export const PrivateRoute = () => {
   const location = useLocation();
-   const routes = [
-     { path: "/", element: <HomePage /> },
-     { path: "/history", element: <HistoryPage /> },
+  const routes = [
+    { path: "/", element: <HomePage /> },
+    { path: "/history", element: <HistoryPage /> },
   ];
   const element = useRoutes(routes);
-  let { user, loading } = useAuth();
+  let { user } = useUserAuth();
   const Loader = () => {
     return <div className="w-screen h-screen flex items-center justify-center">Loading...</div>
   }
-  
+
   return (
     user ? (
       <Fragment>
@@ -28,7 +27,7 @@ export const PrivateRoute = () => {
             <AnimatePresence mode="wait" initial={false}>
               <div className="w-full bg-[#F7F7F7]">
                 <motion.div
-                  className="md:px-[32px] md:py-[40px] relative z-0 w-full mx-auto md:overflow-auto min-h-[calc(100vh-64px)] bg-blue-50"
+                  className=" relative z-0 w-full mx-auto md:overflow-auto min-h-[calc(100vh-64px)] bg-blue-50"
                   key={location.pathname}
                 >
                   {React.cloneElement(element as any, { key: location.pathname })}
@@ -46,6 +45,6 @@ export const PrivateRoute = () => {
 };
 
 export const PublicRouter = () => {
-  let auth = useAuth();
-  return !auth.user ? <Outlet /> : <Navigate to="/" />;
+  let { user } = useUserAuth();
+  return !user ? <Outlet /> : <Navigate to="/" />;
 };

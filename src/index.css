@@ -84,3 +84,12 @@ input[type="file"] {
     display: none;
 }
 
+
+.supabase-auth-ui_ui-button {
+  background-color: rgb(171, 208, 236);
+  border: skyblue;
+}
+.supabase-auth-ui_ui-button:hover {
+  background-color: rgb(39, 142, 220);
+  border: skyblue;
+}

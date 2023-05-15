@@ -1,6 +1,7 @@
 import { CloseIcon, MenuIcon } from "@/components/icons";
-import { useAuth } from "@/context/auth";
+import { useUserAuth } from "@/context/authUser";
 import { oapcityVariants } from "@/helper/farmer-motion";
+import { supabase } from "@/services/supabase";
 import { Popover, Transition } from "@headlessui/react";
 import { motion } from "framer-motion";
 import { Fragment, useState } from "react";
@@ -11,13 +12,11 @@ export let setMenu: any = () => { };
 
 const Header = () => {
     const navigate = useNavigate();
-    const { user, client } = useAuth();
+    const { user } = useUserAuth();
     const [show, setShow] = useState(false);
     setMenu = setShow;
     const onLogout = async () => {
-        await client?.invoke(new Api.auth.LogOut())
-        localStorage.removeItem("sessionString")
-        location.href = "https://tele-app-kappa.vercel.app/"
+        await supabase.auth.signOut();
     };
 
     return (
@@ -82,7 +81,7 @@ const Header = () => {
                                                         src={"/images/avatar-icon.png"}
                                                     />
                                                     <span className="hidden md:block body-2-highlight max-w-[13rem] truncate">
-                                                        {user?.phone}
+                                                        {user?.email}
                                                     </span>
                                                     <img src="/images/chevron-black-down.png" className="w-[24px] ml-[6px]"></img>
                                                 </Popover.Button>
@@ -98,38 +97,6 @@ const Header = () => {
                                                     <Popover.Panel className="shadow-box bg-white right-0 absolute z-[50]  min-w-[calc(100vw-32px)] md:min-w-full  mt-3 transform sm:px-0 border-[1px] border-[#5551FF] rounded-[12px] overflow-hidden">
                                                         <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                                                             <div className=" bg-white p-[20px] min-w-[273px]">
-                                                                <span
-                                                                    className="cursor-pointer flex items-center transition duration-150 ease-in-out rounded-lg focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
-                                                                >
-                                                                    <div className="flex items-center justify-center flex-shrink-0  sm:h-12 sm:w-12">
-                                                                        <img
-                                                                            className=" border-[1px] rounded-full border-smoke width-[40px] h-10 w-10 text-orange-300 fill-black transition ease-in-out duration-150"
-                                                                            src={"/images/avatar-icon.png"}
-                                                                        />
-                                                                    </div>
-                                                                    <div className="ml-2">
-                                                                        <p className="body-2-highlight text-gray-900 whitespace-nowrap ">
-                                                                            {user?.phone}
-                                                                        </p>
-                                                                    </div>
-                                                                </span>
-                                                                <span
-                                                                    className="cursor-pointer flex items-center transition duration-150 ease-in-out rounded-lg focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
-                                                                >
-                                                                    <div className="flex items-center justify-center flex-shrink-0  sm:h-12 sm:w-12">
-                                                                        <img
-                                                                            className=" border-[1px] rounded-full border-smoke width-[20px] h-5 w-5 text-orange-300 fill-black transition ease-in-out duration-150"
-                                                                            src={"/images/history.png"}
-                                                                        />
-                                                                    </div>
-                                                                    <div className="ml-2">
-                                                                        <Link to="/history">
-                                                                        <p className="body-2-highlight text-gray-900 whitespace-nowrap ">
-                                                                            Lịch sử
-                                                                            </p>
-                                                                        </Link>
-                                                                    </div>
-                                                                </span>
                                                             </div>
                                                             <hr className="bg-white mx-4 text-[#E8E8E8]"></hr>
                                                             <div className="px-[20px] pt-[10px] pb-[20px] bg-white" onClick={() => close()}>
