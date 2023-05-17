@@ -72,7 +72,7 @@ const Login = () => {
                                         <label className="block text-gray-700 text-sm font-bold mb-2" >
                                             Số điện thoại
                                         </label>
-                                        <input style={{ backgroundColor: 'white' }} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phone" type="text" placeholder="phone" />
+                                        <input style={{ backgroundColor: 'white' }} className=" text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phone" type="text" placeholder="Nhập vào số điện thoại có mã vùng" />
                                     </div>
                                     {/* <div className="mb-6">
                                         <label className="block text-gray-700 text-sm font-bold mb-2" >

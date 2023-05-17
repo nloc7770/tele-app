@@ -13,17 +13,19 @@ const AuthContext = React.createContext<State | undefined>(undefined)
 const AuthUserProvider = ({ children }: AuthUserProviderProps) => {
     const [user, setUser] = useState<any | null>(null)
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setUser(session?.user)
-        })
-
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user)
-        })
-
-        return () => subscription.unsubscribe()
+        const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
+            if (event == "PASSWORD_RECOVERY") {
+                const newPassword = prompt("What would you like your new password to be?");
+                supabase.auth.updateUser({ password: newPassword||"123123" });  
+            } else if (event === "SIGNED_IN") {
+                setUser(session?.user);
+            } else if (event === "SIGNED_OUT") {
+                setUser(null);
+            }
+        });
+        return () => {
+            data.subscription.unsubscribe();
+        };
     }, [])
     return (
         <AuthContext.Provider
