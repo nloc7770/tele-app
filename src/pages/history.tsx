@@ -10,7 +10,7 @@ export default function index() {
     const [data, setData] = useState<any[]>([]);
     const { toggleToast } = useToast();
     const [loading, setLoading] = useState<boolean>(false)
-    const { client, user } = useAuth();
+    const { result } = useAuth();
     const [currentPage, setCurrentPage] = useState(1);
 
     const currentTableData = useMemo(() => {
@@ -20,9 +20,6 @@ export default function index() {
     }, [currentPage, data]);
     const init = async () => {
         setLoading(true)
-        const result = await client.invoke(
-            new Api.contacts.GetContacts({})
-        );
         setData(result.originalArgs.users)
         setLoading(false)
     }
@@ -33,7 +30,7 @@ export default function index() {
         <div className='flex flex-col justify-center items-center w-full'>
             <h1>Danh sách liên hệ </h1>
             <div className='my-5 self-end flex'>
-                <label className="p-3 border-2 rounded-lg mt-2 cursor-pointer ">
+                <label className="p-3 border-2 rounded-lg mt-2 cursor-pointer border-black">
                     <div
                     >
                         Tổng số liên hệ : {data.length}

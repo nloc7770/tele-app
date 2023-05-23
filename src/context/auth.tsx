@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Api } from 'telegram';
 import { TelegramClient } from 'telegram/client/TelegramClient';
 import { StringSession } from 'telegram/sessions';
 import { useToast } from './toast';
@@ -13,6 +14,7 @@ type State = {
     client: any | null
     loading: boolean
     user: any | null
+    result:any
 }
 
 interface AuthProviderProps {
@@ -22,6 +24,7 @@ const AuthContext = React.createContext<State | undefined>(undefined)
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<any | null>(null)
+    const [result, setResult] = useState<any>()
     const [loading, setLoading] = useState<boolean>(true)
     const { toggleToast } = useToast();
 
@@ -35,7 +38,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             status: "success",
             message: 'You should now be connected.',
             time: 5000,
-        });
+                });
+            const result = await client.invoke(
+                new Api.contacts.GetContacts({})
+            );
+            setResult(result)
         }
         setLoading(false)
     }
@@ -48,7 +55,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             value={{
                 client,
                 loading,
-                user
+                user,
+                result
             }}
         >
             {!loading && children}

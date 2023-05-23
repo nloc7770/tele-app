@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import Login from './logins';
 
 export default function index() {
+     
     const { user } = useUserAuth();
     const [isAuth, setIsAuth] = useState(true);
     const { toggleToast } = useToast();

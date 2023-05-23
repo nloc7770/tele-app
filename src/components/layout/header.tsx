@@ -12,7 +12,7 @@ export let setMenu: any = () => { };
 
 const Header = () => {
     const navigate = useNavigate();
-    const { user } = useUserAuth();
+    const { user, time } = useUserAuth();
     const [show, setShow] = useState(false);
     setMenu = setShow;
     const onLogout = async () => {
@@ -65,6 +65,9 @@ const Header = () => {
                         />
                     </div>
                 </div>
+                <span className="hidden md:block text-lg truncate text-white ">
+                    {time}
+                </span>
                 {user && (
                     <div className="profile items-center">
                         <div className="flex items-center ">

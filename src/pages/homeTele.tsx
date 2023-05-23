@@ -16,7 +16,7 @@ type Item = {
 }
 
 export default function index() {
-    const { client, user } = useAuth();
+    const { client, user, result } = useAuth();
     const [data, setData] = useState<any[]>([]);
     const [error, setError] = useState("");
     const { toggleToast } = useToast();
@@ -30,9 +30,6 @@ export default function index() {
     const [isHistory, setIsHistory] = useState<boolean>(false);
 
     const init = async () => {
-        const result = await client.invoke(
-            new Api.contacts.GetContacts({})
-        );
         setTotalData(result.originalArgs.users.length)
         const { data: dataRes } = await supabase
             .from('checking')
@@ -255,10 +252,10 @@ export default function index() {
                     <table className={`text-black ${loading && "opacity-20"}`}>
                         <thead>
                             <tr >
-                                <th>STT</th>
-                                <th>Số điện thoại</th>
-                                <th>Họ</th>
-                                <th>Tên</th>
+                                <th style={{ width: 100 }}>STT</th>
+                                <th style={{ width: 300 }}>Số điện thoại</th>
+                                <th style={{width:350}}>Họ</th>
+                                <th style={{ width: 350 }}>Tên</th>
                                 <th>Trạng thái</th>
                             </tr>
                         </thead>
@@ -268,7 +265,7 @@ export default function index() {
                                     item?.phone && <tr key={index} >
                                         <th>{item?.index}</th>
                                         <th>{item?.phone}</th>
-                                        <th>{item?.firstName}</th>
+                                        <th >{item?.firstName}</th>
                                         <th>{item?.lastName}</th>
                                         <th>{item?.status == 1 ? "Thành công" : item.status == 0 ? "Chưa xử lý" : "Thất bại"}</th>
                                     </tr>
