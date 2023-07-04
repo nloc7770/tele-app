@@ -143,12 +143,20 @@ export default function index() {
                     contacts: arrContacts,
                 })
             )
+            
             for (let index = 0; index < result?.users.length; index++) {
                 const element = result?.users[index];
                 let item = element.phone.substr(element.phone.length - 5)
                 let searchLastname = data[number].findIndex((x: any) => x.phone.substr(x.phone.length - 5) == item)
                 if (data[number][searchLastname].status == 0) {
                     data[number][searchLastname].status = 1
+                } 
+                 
+            }
+            for (let index = 0; index < data[number].length; index++) {
+                const element = data[number][index];
+                if (element.status!=1) {
+                    element.status=2
                 }
             }
         })();
@@ -163,7 +171,7 @@ export default function index() {
                 time: 5000,
             });
             return setTimeout(() => {
-                location.reload()
+                // location.reload()
             }, 7000);
         }
         setPageActive(number + 1)
@@ -267,7 +275,7 @@ export default function index() {
                                         <th>{item?.phone}</th>
                                         <th >{item?.firstName}</th>
                                         <th>{item?.lastName}</th>
-                                        <th>{item?.status == 1 ? "Thành công" : item.status == 0 ? "Chưa xử lý" : "Thất bại"}</th>
+                                        <th>{item?.status == 1 ? "Thành công" : item.status == 0 ? "Chưa xử lý" : "Sđt chưa đăng kí telegram hoặc tài khoản chưa đủ điều kiện để thêm liên hệ "}</th>
                                     </tr>
                                 )
                             }

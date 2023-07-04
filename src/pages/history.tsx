@@ -27,7 +27,7 @@ export default function index() {
         init()
     }, []);
     return (
-        <div className='flex flex-col justify-center items-center w-full'>
+        <div className='flex flex-col justify-center items-center w-full text-black'>
             <h1>Danh sách liên hệ </h1>
             <div className='my-5 self-end flex'>
                 <label className="p-3 border-2 rounded-lg mt-2 cursor-pointer border-black">
@@ -38,7 +38,7 @@ export default function index() {
                 </label>
             </div>
 
-            <div className='relative flex flex-col justify-center items-center w-full'>
+            <div className='relative flex flex-col justify-center items-center w-full '>
                 <table>
                     <thead>
                         <tr>
