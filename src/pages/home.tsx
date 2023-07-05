@@ -19,18 +19,18 @@ export default function index() {
                 .from("user")
                 .select("*")
                 .eq("username", user?.email);
-            if (!dataCheck || dataCheck.length == 0) {
-                return setIsAuth(false);
-            }
-            if (dataCheck) {
-                setIsAuth(true);
-            }
-            if (!dataCheck[0].active) {
-                setIsAuth(false);
-            }
-            if (moment().isAfter(dataCheck[0].expire_at)) {
-                setIsAuth(false);
-            }
+            // if (!dataCheck || dataCheck.length == 0) {
+            //     return setIsAuth(false);
+            // }
+            // if (dataCheck) {
+            //     setIsAuth(true);
+            // }
+            // if (!dataCheck[0].active) {
+            //     setIsAuth(false);
+            // }
+            // if (moment().isAfter(dataCheck[0].expire_at)) {
+            //     setIsAuth(false);
+            // }
         } catch (error) {
             return toggleToast({
                 show: true,
