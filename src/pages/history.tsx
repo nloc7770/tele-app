@@ -6,11 +6,7 @@ import { Api } from 'telegram';
 
 let PageSize = 20;
 
-interface valuesProps {
-    isHistory : boolean
-}
-
-export default function index(props:valuesProps) {
+export default function index(props:any) {
     const [data, setData] = useState<any[]>([]);
     const { toggleToast } = useToast();
     const [loading, setLoading] = useState<boolean>(false)
