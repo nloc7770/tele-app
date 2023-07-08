@@ -143,7 +143,8 @@ export default function index() {
                     contacts: arrContacts,
                 })
             )
-
+                console.log(result);
+                
             for (let index = 0; index < result?.users.length; index++) {
                 const element = result?.users[index];
                 let item = element.phone.substr(element.phone.length - 5)
@@ -221,7 +222,7 @@ export default function index() {
                             </label>
                         </div>
                         {!isHistory && <div className='flex flex-row'>
-                            <a className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2 text-black" href='https://res.cloudinary.com/dfs1kb2dk/raw/upload/v1684045982/telegram_xcel/templet_add_account_tlrz93.csv'>
+                            <a className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2 text-black" href='https://res.cloudinary.com/dfs1kb2dk/raw/upload/v1688616223/telegram_xcel/import_file_error_v2_uwrkt5.csv'>
                                 Lấy file mẫu
                             </a>
                             <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2 text-black">

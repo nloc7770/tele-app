@@ -3,18 +3,14 @@ import { Api } from 'telegram';
 import { TelegramClient } from 'telegram/client/TelegramClient';
 import { StringSession } from 'telegram/sessions';
 import { useToast } from './toast';
+import { hashs } from '@/const';
 
-const apiID = Number(import.meta.env.VITE_API_ID)
-const apiHash = import.meta.env.VITE_API_HASH
-const stringSession = new StringSession(localStorage.getItem("sessionString") || "");
-const client = new TelegramClient(stringSession, apiID, apiHash, {
-    connectionRetries: 5,
-});
+
 type State = {
     client: any | null
     loading: boolean
     user: any | null
-    result:any
+    result: any
 }
 
 interface AuthProviderProps {
@@ -25,21 +21,29 @@ const AuthContext = React.createContext<State | undefined>(undefined)
 const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<any | null>(null)
     const [result, setResult] = useState<any>()
+    const [client, setClient] = useState<any>()
     const [loading, setLoading] = useState<boolean>(true)
     const { toggleToast } = useToast();
 
     const init = async () => {
-        await client.connect();
-        if (await client.checkAuthorization()) {
-            const me = await client.getMe();
+        const randomInfo = hashs[Math.floor(Math.random()*hashs.length)];
+        const stringSession = new StringSession(localStorage.getItem("sessionString") || "");
+        const clientTele = new TelegramClient(stringSession, randomInfo.id, randomInfo.hash, {
+            connectionRetries: 5,
+        });
+        await clientTele.connect();
+        setClient(clientTele)
+
+        if (await clientTele.checkAuthorization()) {
+            const me = await clientTele.getMe();
             setUser(me)
-                toggleToast({
-            show: true,
-            status: "success",
-            message: 'You should now be connected.',
-            time: 5000,
-                });
-            const result = await client.invoke(
+            toggleToast({
+                show: true,
+                status: "success",
+                message: 'You should now be connected.',
+                time: 5000,
+            });
+            const result = await clientTele.invoke(
                 new Api.contacts.GetContacts({})
             );
             setResult(result)
