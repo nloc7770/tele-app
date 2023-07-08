@@ -2,11 +2,10 @@ import Pagination from '@/components/common/pagination';
 import { useAuth } from '@/context/auth';
 import { useToast } from '@/context/toast';
 import { useEffect, useMemo, useState } from 'react';
-import { Api } from 'telegram';
 
 let PageSize = 20;
 
-export default function index(props:any) {
+export default function index() {
     const [data, setData] = useState<any[]>([]);
     const { toggleToast } = useToast();
     const [loading, setLoading] = useState<boolean>(false)
@@ -25,7 +24,7 @@ export default function index(props:any) {
     }
     useEffect(() => {
         init()
-    }, [props?.isHistory]);
+    }, []);
     return (
         <div className='flex flex-col justify-center items-center w-full text-black'>
             <h1>Danh sách liên hệ </h1>

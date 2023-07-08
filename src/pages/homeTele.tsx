@@ -281,7 +281,7 @@ export default function index() {
                                 Trang sau
                             </a>
                         </div>}
-                        {isHistory ? <History isHistory={isHistory} /> :
+                        {isHistory ? <History /> :
                             <div className="relative items-center block w-full p-6 bg-white border border-gray-100 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-800 dark:hover:bg-gray-700 mt-2">
                                 <table className={`text-black ${loading && "opacity-20"}`}>
                                     <thead>
