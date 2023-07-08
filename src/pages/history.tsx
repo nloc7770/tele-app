@@ -6,7 +6,11 @@ import { Api } from 'telegram';
 
 let PageSize = 20;
 
-export default function index() {
+interface valuesProps {
+    isHistory : boolean
+}
+
+export default function index(props:valuesProps) {
     const [data, setData] = useState<any[]>([]);
     const { toggleToast } = useToast();
     const [loading, setLoading] = useState<boolean>(false)
@@ -25,7 +29,7 @@ export default function index() {
     }
     useEffect(() => {
         init()
-    }, []);
+    }, [props?.isHistory]);
     return (
         <div className='flex flex-col justify-center items-center w-full text-black'>
             <h1>Danh sách liên hệ </h1>
@@ -50,7 +54,7 @@ export default function index() {
                     <tbody>
                         {currentTableData.map((item: any, index) => {
                             return (
-                                <tr key={item.phone}>
+                                <tr key={index}>
                                     <td>{item.firstName}</td>
                                     <td>{item.lastName}</td>
                                     <td>{item.phone}</td>
