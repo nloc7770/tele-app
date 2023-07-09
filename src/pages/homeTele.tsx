@@ -143,8 +143,8 @@ export default function index() {
                     contacts: arrContacts,
                 })
             )
-                console.log(result);
-                
+            console.log(result);
+
             for (let index = 0; index < result?.users.length; index++) {
                 const element = result?.users[index];
                 let item = element.phone.substr(element.phone.length - 5)
@@ -197,69 +197,72 @@ export default function index() {
     return (
         <React.Fragment>
 
-            <div className='flex flex-col justify-center items-center w-full px-10'>
+            <div className='flex flex-col  w-full'>
                 {isActive ? <React.Fragment>
                     {data?.length > 0 && <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
                         <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${pageRunning * 100 / data?.length}%` }}>{(pageRunning * 100 / data?.length).toFixed(2)}%</div>
                     </div>}
-                    <div className='my-5 justify-between flex w-full fixed z-10 bg-white px-10 py-10 h-30 top-10'>
-                        <div className='flex flex-row'>
-                            <label className="p-3 border-2 rounded-lg mr-2 cursor-pointer border-black text-black">
-                                <div
-                                    className='text-black'
-                                >
-                                    Tổng số liên hệ đã thêm : {totalData}
-                                </div>
-                            </label>
-                            <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2 text-black">
-                                <div
-                                    onClick={() => {
-                                        setIsHistory(!isHistory)
-                                    }}
-                                >
-                                    {!isHistory ? "Xem lịch sử" : "Thêm liên hệ"}
-                                </div>
-                            </label>
+
+
+                    <div className="w-full fixed z-10 bg-white px-10 py-10 h-30 top-10">
+                        <div className="md:flex md:justify-between">
+                            <div className="grid grid-cols-1 gap-1 sm:gap-2 sm:grid-cols-2">
+                                <label className="p-3 border-2 rounded-lg mr-2 cursor-pointer border-black text-black">
+                                    <div className='text-black'>
+                                        Tổng số liên hệ đã thêm : {totalData}
+                                    </div>
+                                </label>
+                                <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2 text-black">
+                                    <div
+                                        onClick={() => {
+                                            setIsHistory(!isHistory)
+                                        }}
+                                    >
+                                        {!isHistory ? "Xem lịch sử" : "Thêm liên hệ"}
+                                    </div>
+                                </label>
+                            </div>
+                            {!isHistory && <div className="grid grid-cols-1 gap-1 sm:gap-1 sm:grid-cols-4 mt-1">
+                                <a className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2 text-black" href='https://res.cloudinary.com/dfs1kb2dk/raw/upload/v1688616223/telegram_xcel/import_file_error_v2_uwrkt5.csv'>
+                                    Tải file mẫu
+                                </a>
+                                <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2 text-black">
+                                    <input
+                                        onChange={handleOnChange}
+                                        id="csvInput"
+                                        name="file"
+                                        type="File"
+                                        accept={".csv"}
+                                    />
+                                    Lấy danh sách liên hệ
+                                </label>
+                                <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2 text-black">
+                                    <div
+                                        onClick={() => {
+                                            handleAddContact(0)
+                                        }}
+                                    >
+                                        Thêm liên hệ
+                                    </div>
+                                </label>
+                                <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2 text-black">
+                                    <div
+                                        onClick={() => {
+                                            onLogout()
+                                        }}
+                                    >
+                                        Đổi tài khoản
+                                    </div>
+                                </label>
+
+
+                            </div>}
                         </div>
-                        {!isHistory && <div className='flex flex-row'>
-                            <a className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2 text-black" href='https://res.cloudinary.com/dfs1kb2dk/raw/upload/v1688616223/telegram_xcel/import_file_error_v2_uwrkt5.csv'>
-                                Lấy file mẫu
-                            </a>
-                            <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2 text-black">
-                                <input
-                                    onChange={
-                                        handleOnChange
-                                    }
-                                    id="csvInput"
-                                    name="file"
-                                    type="File"
-                                    accept={".csv"}
-                                />
 
-                                Lấy danh sách liên hệ
-                            </label>
-
-                            <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2 text-black">
-                                <div
-                                    onClick={() => {
-                                        handleAddContact(0)
-                                    }}
-                                >
-                                    Thêm liên hệ
-                                </div>
-                            </label>
-                            <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black text-black">
-                                <div
-                                    onClick={() => {
-                                        onLogout()
-                                    }}
-                                >
-                                    Đổi tài khoản
-                                </div>
-                            </label>
-                        </div>}
                     </div>
-                    <div className='mt-40' style={{ minHeight: '68vh' }}>
+
+
+                    <div className='mt-[400px] md:mt-32 px-5 md:min-h-[72vh]' >
                         {data && data?.length > 0 && <div className="flex items-center space-x-1 self-end mt-3">
                             <a onClick={() => {
                                 if (pageActive != 0) {
@@ -343,7 +346,7 @@ export default function index() {
 
             </div>
 
-            <footer className="bg-white dark:bg-gray-900">
+            <footer className="bg-white">
                 <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
                     <div className="md:flex md:justify-between">
                         <div className="mb-6 md:mb-0">
@@ -352,26 +355,24 @@ export default function index() {
                                 <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Supertool</span>
                             </a>
                         </div>
-                        <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
+                        <div className="grid grid-cols-1 gap-8 sm:gap-1 sm:grid-cols-1">
                             <div>
-                                <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Gia hạn - yêu cầu hỗ trợ liên hệ</h2>
+
                                 <ul className="text-gray-500 dark:text-gray-400 font-medium">
                                     <li className="mb-4">
-                                        <a href="#" className="hover:underline">Tele: @ihopez</a>
+                                        <a href="#" className="hover:underline">GIA HẠN - YÊU CẦU HỖ TRỢ LIÊN HỆ - Tele: @ihopez hoặc @lp668899 - Nhận viết Tools và nâng cấp theo yêu cầu.</a>
                                     </li>
-                                    <li>
-                                        <span  className="hover:underline">Nhận viết Tools vs nâng cấp theo yêu cầu.</span>
-                                    </li>
+
                                 </ul>
                             </div>
-                            
+
                         </div>
                     </div>
-                    <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+                    <hr className=" border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
                     <div className="sm:flex sm:items-center sm:justify-between">
                         <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <a href="#" className="hover:underline">Supertool™</a>. All Rights Reserved.
                         </span>
-                        
+
                     </div>
                 </div>
             </footer>
