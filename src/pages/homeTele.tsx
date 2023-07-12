@@ -134,7 +134,6 @@ export default function index() {
             }
         }
 
-
         (async function run() {
             await client.connect(); // This assumes you have already authenticated with .start()
 
@@ -143,7 +142,6 @@ export default function index() {
                     contacts: arrContacts,
                 })
             )
-            console.log(result);
 
             for (let index = 0; index < result?.users.length; index++) {
                 const element = result?.users[index];
@@ -205,8 +203,14 @@ export default function index() {
 
 
                     <div className="w-full fixed z-10 bg-white px-10 py-10 h-30 top-10">
+
                         <div className="md:flex md:justify-between">
-                            <div className="grid grid-cols-1 gap-1 sm:gap-2 sm:grid-cols-2">
+                            <div className="grid grid-cols-1 gap-1 sm:gap-2 sm:grid-cols-3">
+                                <label className="p-3 border-2 rounded-lg mr-2 cursor-pointer border-black text-black">
+                                    <div className='text-black'>
+                                    Số hiện tại: {user?.phone}
+                                    </div>
+                                </label>
                                 <label className="p-3 border-2 rounded-lg mr-2 cursor-pointer border-black text-black">
                                     <div className='text-black'>
                                         Tổng số liên hệ đã thêm : {totalData}

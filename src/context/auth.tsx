@@ -54,13 +54,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         init()
     }, []);
 
+    const getListUserAdd = ()=>{
+
+        init()
+        
+    }
+
     return (
         <AuthContext.Provider
             value={{
                 client,
                 loading,
                 user,
-                result
+                result,
             }}
         >
             {!loading && children}
