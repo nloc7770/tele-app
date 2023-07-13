@@ -16,7 +16,7 @@ type Item = {
 }
 
 export default function index() {
-    const { client, user, result } = useAuth();
+    const { client, user, result, getListUserAdd } = useAuth();
     const [data, setData] = useState<any[]>([]);
     const [error, setError] = useState("");
     const { toggleToast } = useToast();
@@ -169,11 +169,13 @@ export default function index() {
                 message: "Hoàn thành!",
                 time: 5000,
             });
+            
             return setTimeout(() => {
                 // location.reload()
             }, 7000);
         }
         setPageActive(number + 1)
+        getListUserAdd()
         toggleToast({
             show: true,
             status: "warning",

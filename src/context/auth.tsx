@@ -54,9 +54,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         init()
     }, []);
 
-    const getListUserAdd = ()=>{
-
-        init()
+    const getListUserAdd = async()=>{
+        await client.connect(); // This assumes you have already authenticated with .start()
+        const result = await client.invoke(
+            new Api.contacts.GetContacts({})
+        );
+        setResult(result)
+        
         
     }
 
@@ -67,6 +71,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
                 loading,
                 user,
                 result,
+                getListUserAdd
             }}
         >
             {!loading && children}
