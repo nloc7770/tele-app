@@ -22,6 +22,7 @@
     "events": "^3.3.0",
     "flowbite": "^1.6.4",
     "framer-motion": "^10.2.3",
+    "fs": "^0.0.1-security",
     "global": "^4.4.0",
     "headlessui": "^0.0.0",
     "moment": "^2.29.4",

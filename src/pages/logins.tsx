@@ -1,24 +1,30 @@
 import Button from "@/components/common/button";
-import { oapcityVariants } from "@/helper/farmer-motion";
-import { motion } from "framer-motion";
-import { BaseSyntheticEvent, useEffect, useState } from "react";
-import { Api, TelegramClient } from "telegram";
-import { NewMessage } from "telegram/events";
-import { StringSession } from "telegram/sessions";
+import {oapcityVariants} from "@/helper/farmer-motion";
+import {motion} from "framer-motion";
+import {BaseSyntheticEvent,useEffect,useState} from "react";
+import {Api,TelegramClient} from "telegram";
+import {generateRandomBytes, readBigIntFromBuffer} from "telegram/Helpers";
+import {NewMessage} from "telegram/events";
+import {StringSession} from "telegram/sessions";
+import {Buffer} from 'buffer';
+import bigInt from "big-integer";
 
-const apiID = Number(import.meta.env.VITE_API_ID)
-const apiHash = import.meta.env.VITE_API_HASH
+const apiID=Number(import.meta.env.VITE_API_ID)
+const apiHash=import.meta.env.VITE_API_HASH
 
 interface IInitialState {
     phoneNumber: string
     password: string
     phoneCode: string
 }
-const initialState: IInitialState = { phoneNumber: '', password: '', phoneCode: '' } // Initialize component initial state
+const initialState: IInitialState={phoneNumber: '',password: '',phoneCode: ''} // Initialize component initial state
 
-const Login = () => {
-    const arr = ["1BQAWZmxvcmEud2ViLnRlbGVncmFtLm9yZwG7ZxKcV8Hm6yk05ncaNI65p1S/P42XGb5+2GWVJK95Jho6k/W3V69n93Rv5+RefneTrPzwDJESEZRInnLZKIEoXl3kRM3BXVHXY6+N0Hnt7lQ2gYwNLFYvwZ2eDQwTI2q7Nf6Ulv0huVlGC7m+0uOwwhBVS95lO7Z7XA1VYyWFGNhADQuk8r+qXb20gjp6+bZOc3yu3aIiKeI9eWxoSnc5GNkMN2Mk+yQ1yFXzz0Nv7JlqGoxtnZ9xV4DW4+L2aRhMBNKAEBpUa+heWCNKXoxa5fCjfSjn5RFCFQq5nHG/chpD3Yms0HK0g0dm4IZb+5PPDJCUGNVGVe8lqHgRbSIIWA==", "1BQAWZmxvcmEud2ViLnRlbGVncmFtLm9yZwG7QMJov4h9tQqwYo70BHC+jrqKcghfAL9NCmxAggWYhW51tfPY90tzWYkKlQNStqATpkzOia4DARndVk2bsMgP4DgSvSnjZPNlLivtFSZaaRhxK/bH+/kmSL0rOJ96brAuVAX2oRIod1at3fzBY8NnNaD1A4XmV9NZjRtkzaptT3GtcR+WcxxsiLsM7z+NeQVwBOAhdC2VXSjXKpmpBSvpB92S8e4H3/HD1LZy3lACj8UFvscHMAKK2gybChcYP5LIYm5BeW31t/OcgzVqAUoBYay16ARRHNPjI4a9/tvjcpG3TphL+HGDayZpuxi48tRS85UDjXFvbP0QNobb33lkIA=="]
-    const [{ phoneNumber, password, phoneCode }, setAuthInfo] = useState<IInitialState>(initialState)
+const Login=() => {
+    const [chats,setChats]=useState();
+    const [s,sets]=useState();
+
+    const arr=["1BQAWZmxvcmEud2ViLnRlbGVncmFtLm9yZwG7ZxKcV8Hm6yk05ncaNI65p1S/P42XGb5+2GWVJK95Jho6k/W3V69n93Rv5+RefneTrPzwDJESEZRInnLZKIEoXl3kRM3BXVHXY6+N0Hnt7lQ2gYwNLFYvwZ2eDQwTI2q7Nf6Ulv0huVlGC7m+0uOwwhBVS95lO7Z7XA1VYyWFGNhADQuk8r+qXb20gjp6+bZOc3yu3aIiKeI9eWxoSnc5GNkMN2Mk+yQ1yFXzz0Nv7JlqGoxtnZ9xV4DW4+L2aRhMBNKAEBpUa+heWCNKXoxa5fCjfSjn5RFCFQq5nHG/chpD3Yms0HK0g0dm4IZb+5PPDJCUGNVGVe8lqHgRbSIIWA==","1BQAWZmxvcmEud2ViLnRlbGVncmFtLm9yZwG7QMJov4h9tQqwYo70BHC+jrqKcghfAL9NCmxAggWYhW51tfPY90tzWYkKlQNStqATpkzOia4DARndVk2bsMgP4DgSvSnjZPNlLivtFSZaaRhxK/bH+/kmSL0rOJ96brAuVAX2oRIod1at3fzBY8NnNaD1A4XmV9NZjRtkzaptT3GtcR+WcxxsiLsM7z+NeQVwBOAhdC2VXSjXKpmpBSvpB92S8e4H3/HD1LZy3lACj8UFvscHMAKK2gybChcYP5LIYm5BeW31t/OcgzVqAUoBYay16ARRHNPjI4a9/tvjcpG3TphL+HGDayZpuxi48tRS85UDjXFvbP0QNobb33lkIA=="]
+    const [{phoneNumber,password,phoneCode},setAuthInfo]=useState<IInitialState>(initialState)
     // async function clientStartHandler(): Promise<void> {
     //     try {
     //         await client.start({ phoneNumber, password: userAuthParamCallback(password), phoneCode: userAuthParamCallback(phoneCode), onError: () => { } })
@@ -30,7 +36,7 @@ const Login = () => {
     // async function sendCodeHandler() {
     //     await client.connect() // Connecting to the server
     //     console.log(phoneNumber);
-        
+
     //     await client.sendCode(
     //         {
     //             apiId: apiID,
@@ -39,47 +45,101 @@ const Login = () => {
     //         phoneNumber
     //     )
     // }
-    function inputChangeHandler({ target: { name, value } }: BaseSyntheticEvent): void {
-        setAuthInfo((authInfo) => ({ ...authInfo, [name]: value }))
+    function inputChangeHandler({target: {name,value}}: BaseSyntheticEvent): void {
+        setAuthInfo((authInfo) => ({...authInfo,[name]: value}))
     }
 
     function userAuthParamCallback<T>(param: T): () => Promise<T> {
-        return async function () {
+        return async function() {
             return await new Promise<T>(resolve => {
                 resolve(param)
             })
         }
     }
-    const init = async () => {
-        for (let index = 0; index < arr.length; index++) {
-            const element = arr[index];
-            const SESSION = new StringSession(element) // Get session from local storage
-            const client = new TelegramClient(SESSION, apiID, apiHash, { connectionRetries: 5 })
-            
+    const arrayBufferToBase64=(buffer: any) => {
+        var binary='';
+        var bytes=[].slice.call(new Uint8Array(buffer));
+        bytes.forEach((b) => binary+=String.fromCharCode(b));
+        return window.btoa(binary);
+    };
+    const init=async () => {
+        for(let index=0;index<1;index++) {
+            const element=arr[index];
+            const SESSION=new StringSession(element) // Get session from local storage
+            const client=new TelegramClient(SESSION,apiID,apiHash,{connectionRetries: 5})
+
             await client.connect() // Connecting to the server
-           // const LIMIT = 4;
-        const offsetId = 0;
-        const offsetPeer = new Api.InputPeerEmpty();
-        let offsetDate = 0;
-        let chats = [];
+            // const LIMIT = 4;
+            const offsetId=0;
+            const offsetPeer=new Api.InputPeerEmpty();
+            let offsetDate=0;
+            let chats=[];
+            const me: any=await client.getMe()
 
-        const result = await client.invoke(
 
-            new Api.messages.GetDialogs({
-                offsetId,
-                offsetPeer,
-                offsetDate,
-                limit: 5
-            }),
-        );
-            console.log(result);
+            const result: any=await client.invoke(
 
+                new Api.messages.GetDialogs({
+                    offsetId,
+                    offsetPeer,
+                    offsetDate,
+                }),
+            );
+            // const results: any = await client.invoke(
+            //     new Api.photos.GetUserPhotos({
+            //       userId: result.chats[0].id,
+            //       offset: 43,
+            //       maxId: readBigIntFromBuffer(generateRandomBytes(8)),
+            //       limit: 100,
+            //     })
+            //   );
+
+            // const results: any = await client.invoke(
+            //     new Api.upload.GetFile({
+            //       fileToken: Buffer.from(result.chats[0].photo.strippedThumb.buffer),
+            //       offset: readBigIntFromBuffer(generateRandomBytes(8)),
+            //     })
+            //   );
+            console.log(result.chats[0]);
+             const buffer = result.chats[0].photo.strippedThumb
+             const blob = new Blob([buffer]);
+                                        
+             const url = window.URL.createObjectURL(blob);
+            //  const a = document.createElement("a");
+            //  document.body.appendChild(a);
+            //  a.href = url;
+            // //  a.download = "filename.jpg";
+            // //  a.click();
+            // //  window.URL.revokeObjectURL(url);
+            // console.log(url);
+            
+            // const results = await client.invoke(
+            //     new Api.upload.GetCdnFile({
+            //       fileToken:.buffer,
+            //       offset: 0,
+            //       limit: 100,
+            //     })
+            //   );
+            // const results: any = await client.invoke(new Api.upload.GetFile({
+            //     offset: 0,
+            //     limit: 1024 * 1024,
+            //     precise: false,
+            //     cdnSupported: false,
+            //     location: new Api.InputFileLocation({ 
+            //          volumeId: result.chats[0].accessHash                     ,
+            //         localId: 1,
+            //         secret: readBigIntFromBuffer(generateRandomBytes(8)),
+            //         fileReference: 
+            //     }),
+            //     }));
+            // console.log(results); // prints the result
+           
+
+            setChats(url)
             client.addEventHandler((event: any) => {
-                if (event.isPrivate) {
+                if(event.isPrivate) {
                     // prints sender id
-                   
-                    
-                    const message = event.message;
+                    const message=event.message;
                     console.log(message.senderId);
                     // read message
                     // if (message.text == "hello") {
@@ -91,23 +151,26 @@ const Login = () => {
                 }
                 // console.log(event.message); // Log the message object
 
-            }, new NewMessage({}));
+            },new NewMessage({}));
         }
         // const SESSIONs = new StringSession(JSON.parse(localStorage.getItem('84346508758') as string)) // Get session from local storage
-        
+
         // console.log(result);
 
 
 
 
-        
+
     }
     useEffect(() => {
         init()
     },[])
+    console.log(chats);
+
     return (
         <motion.div variants={oapcityVariants} exit="hidden" initial="hidden" animate="visible" className="flex flex-col h-[calc(100vh-64px)] w-screen">
-            <div className="shadow-box p-[20px] md:p-10  flex items-center justify-center bg-base bg-cover bg-no-repeat bg-center flex-1">
+            <img src={chats} alt="" />
+            {/* <div className="shadow-box p-[20px] md:p-10  flex items-center justify-center bg-base bg-cover bg-no-repeat bg-center flex-1">
                 <div className=" bg-white rounded-[24px] min-w-full md:min-w-[400px] flex shadow-box">
                     <motion.div
                         variants={oapcityVariants}
@@ -132,7 +195,7 @@ const Login = () => {
                                 </label>
                                 <input
                                     onChange={inputChangeHandler}
-                                    style={{ backgroundColor: 'white' }}
+                                    style={{backgroundColor: 'white'}}
                                     className=" text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     name="phoneNumber"
                                     type="text"
@@ -145,7 +208,7 @@ const Login = () => {
                                 <input
                                     onChange={inputChangeHandler}
                                     name="password"
-                                    style={{ backgroundColor: 'white' }} className=" text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phone" type="text" placeholder="Nhập vào số điện thoại có mã vùng" />
+                                    style={{backgroundColor: 'white'}} className=" text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phone" type="text" placeholder="Nhập vào số điện thoại có mã vùng" />
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" >
@@ -154,7 +217,7 @@ const Login = () => {
                                 <input
                                     onChange={inputChangeHandler}
                                     name="phoneCode"
-                                    style={{ backgroundColor: 'white' }} className=" text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phone" type="text" placeholder="Nhập vào số điện thoại có mã vùng" />
+                                    style={{backgroundColor: 'white'}} className=" text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phone" type="text" placeholder="Nhập vào số điện thoại có mã vùng" />
                             </div>
                             <div className="flex items-center justify-between">
                                 <Button
@@ -171,7 +234,7 @@ const Login = () => {
                         </div>
                     </motion.div>
                 </div>
-            </div>
+            </div> */}
         </motion.div >
     );
 };

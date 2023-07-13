@@ -10,7 +10,6 @@ export default function index() {
     const [data, setData] = useState<any[]>([]);
     const { toggleToast } = useToast();
     const [loading, setLoading] = useState<boolean>(false)
-    const { result } = useAuth();
     const [currentPage, setCurrentPage] = useState(1);
 
     const currentTableData = useMemo(() => {
