@@ -169,19 +169,20 @@ export default function index() {
                 message: "Hoàn thành!",
                 time: 5000,
             });
-            
+            getListUserAdd()
             return setTimeout(() => {
                 // location.reload()
             }, 7000);
         }
         setPageActive(number + 1)
-        getListUserAdd()
+        
         toggleToast({
             show: true,
             status: "warning",
             message: "Vui lòng chờ 1 phút để tiến trình tiếp tục!",
             time: 60000,
         });
+        
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
