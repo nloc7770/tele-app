@@ -11,6 +11,7 @@ type State = {
     loading: boolean
     user: any | null
     result: any
+    getListUserAdd: () => Promise<void>
 }
 
 interface AuthProviderProps {
