@@ -175,19 +175,26 @@ export default function index() {
             }, 7000);
         }
         setPageActive(number + 1)
-        
+
+        toggleToast({
+            show: true,
+            status: "success",
+            message: "Hoàn thành!",
+            time: 1000,
+        });
+
         toggleToast({
             show: true,
             status: "warning",
-            message: "Vui lòng chờ 1 phút để tiến trình tiếp tục!",
+            message: "Để tránh spam vui lòng chờ 1 phút để tiến trình tiếp tục!",
             time: 60000,
         });
-        
+
         setTimeout(async () => {
             if (data?.length !== number) {
                 await handleAddContact(number + 1)
             }
-        }, 60000);
+        }, 80000);
     }
     const onLogout = async () => {
         await client?.invoke(new Api.auth.LogOut())
@@ -209,30 +216,28 @@ export default function index() {
 
                         <div className="md:flex md:justify-between">
                             <div className="grid grid-cols-1 gap-1 sm:gap-2 sm:grid-cols-3">
-                                <label className="p-3 border-2 rounded-lg mr-2 cursor-pointer border-black text-black">
-                                    <div className='text-black'>
-                                    Số hiện tại: {user?.phone}
-                                    </div>
-                                </label>
-                                <label className="p-3 border-2 rounded-lg mr-2 cursor-pointer border-black text-black">
-                                    <div className='text-black'>
+                                <div className="p-3 border-2 rounded-lg mr-2 cursor-pointer border-black text-black">
+                                    <span className='text-black'>
+                                        Số hiện tại: {user?.phone}
+                                    </span>
+                                </div>
+                                <div className="p-3 border-2 rounded-lg mr-2 cursor-pointer border-black text-black">
+                                    <span className='text-black'>
                                         Tổng số liên hệ đã thêm : {totalData}
-                                    </div>
-                                </label>
-                                <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2 text-black">
-                                    <div
-                                        onClick={() => {
-                                            setIsHistory(!isHistory)
-                                        }}
-                                    >
+                                    </span>
+                                </div>
+                                <div onClick={() => { setIsHistory(!isHistory) }}
+                                    className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2 text-black">
+                                    <span>
                                         {!isHistory ? "Xem lịch sử" : "Thêm liên hệ"}
-                                    </div>
-                                </label>
+                                    </span>
+                                </div>
                             </div>
                             {!isHistory && <div className="grid grid-cols-1 gap-1 sm:gap-1 sm:grid-cols-4 mt-1">
                                 <a className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2 text-black" href='https://res.cloudinary.com/dfs1kb2dk/raw/upload/v1688616223/telegram_xcel/import_file_error_v2_uwrkt5.csv'>
                                     Tải file mẫu
                                 </a>
+
                                 <label className="p-3 border-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer border-black mr-2 text-black">
                                     <input
                                         onChange={handleOnChange}
@@ -243,24 +248,17 @@ export default function index() {
                                     />
                                     Lấy danh sách liên hệ
                                 </label>
-                                <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2 text-black">
-                                    <div
-                                        onClick={() => {
-                                            handleAddContact(0)
-                                        }}
-                                    >
+                                <div onClick={() => { handleAddContact(0) }}
+                                    className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2 text-black">
+                                    <span>
                                         Thêm liên hệ
-                                    </div>
-                                </label>
-                                <label className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2 text-black">
-                                    <div
-                                        onClick={() => {
-                                            onLogout()
-                                        }}
-                                    >
+                                    </span>
+                                </div>
+                                <div onClick={() => { onLogout() }} className="p-3 border-2 rounded-lg bg-blue-300 hover:bg-blue-500 cursor-pointer border-black mr-2 text-black">
+                                    <span>
                                         Đổi tài khoản
-                                    </div>
-                                </label>
+                                    </span>
+                                </div>
 
 
                             </div>}

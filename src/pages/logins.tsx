@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Home from "./homeTele";
 
 const Login = () => {
-    const { client,user } = useAuth()
+    const { client, user } = useAuth()
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(true);
@@ -16,37 +16,42 @@ const Login = () => {
 
 
     const onLogin = async (e: any) => {
-        e.preventDefault();
-        let phone = e.target.elements.phone?.value;
-        if (!phone) return toggleToast({
-            show: true,
-            status: "fail",
-            message: "Vui lòng nhập số điện thoại",
-            time: 5000,
-        });
-        await client.start({
-            phoneNumber: phone,
-            phoneCode: async () => prompt('Nhập code từ số điện thoại hoặc telegram'),
-            password: async () => prompt("Please enter your password: "),
-            // TODO implement actual error handling 
-            onError: (error: any) => {
-                return toggleToast({
-                    show: true,
-                    status: "fail",
-                    message: error?.message,
-                    time: 5000,
-                });
-            }
-        })
-        localStorage.setItem("sessionString", client.session.save() as any as string)
+        try {
+            e.preventDefault();
+            let phone = e.target.elements.phone?.value;
+            if (!phone) return toggleToast({
+                show: true,
+                status: "fail",
+                message: "Vui lòng nhập số điện thoại",
+                time: 5000,
+            });
+            await client.start({
+                phoneNumber: phone,
+                phoneCode: async () => prompt('Nhập code từ số điện thoại hoặc telegram'),
+                password: async () => prompt("Please enter your password: "),
+                // TODO implement actual error handling 
+                onError: (error: any) => {
+                    return toggleToast({
+                        show: true,
+                        status: "fail",
+                        message: error?.message,
+                        time: 5000,
+                    });
+                }
+            })
+            localStorage.setItem("sessionString", client.session.save() as any as string)
             // location.href = "https://tele-app-kappa.vercel.app/"
-        location.reload()
+            location.reload()
+        } catch (error) {
+            console.dir(error)
+        }
+
     }
 
     return (
         <motion.div variants={oapcityVariants} exit="hidden" initial="hidden" animate="visible" className="flex flex-col h-[calc(100vh-64px)] w-screen">
             {user ? <>
-            <Home/>
+                <Home />
             </> : <div className="shadow-box p-[20px] md:p-10  flex items-center justify-center bg-base bg-cover bg-no-repeat bg-center flex-1">
                 <div className=" bg-white rounded-[24px] min-w-full md:min-w-[400px] flex shadow-box">
                     {loading && (

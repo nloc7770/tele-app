@@ -61,8 +61,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             new Api.contacts.GetContacts({})
         );
         setResult(result)
-        
-        
     }
 
     return (
