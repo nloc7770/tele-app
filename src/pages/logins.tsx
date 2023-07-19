@@ -1,241 +1,325 @@
-import Button from "@/components/common/button";
-import {oapcityVariants} from "@/helper/farmer-motion";
-import {motion} from "framer-motion";
+import Chat from "@/components/chat";
 import {BaseSyntheticEvent,useEffect,useState} from "react";
-import {Api,TelegramClient} from "telegram";
-import {generateRandomBytes, readBigIntFromBuffer} from "telegram/Helpers";
-import {NewMessage} from "telegram/events";
-import {StringSession} from "telegram/sessions";
-import {Buffer} from 'buffer';
-import bigInt from "big-integer";
 
-const apiID=Number(import.meta.env.VITE_API_ID)
-const apiHash=import.meta.env.VITE_API_HASH
+import {Api,TelegramClient} from "telegram";
+
+import {NewMessage} from "telegram/events";
+
+import {StringSession} from "telegram/sessions";
+
+const apiID=Number(import.meta.env.VITE_API_ID);
+
+const apiHash=import.meta.env.VITE_API_HASH;
 
 interface IInitialState {
-    phoneNumber: string
-    password: string
-    phoneCode: string
+    phoneNumber: string;
+
+    password: string;
+
+    phoneCode: string;
 }
-const initialState: IInitialState={phoneNumber: '',password: '',phoneCode: ''} // Initialize component initial state
 
 const Login=() => {
-    const [chats,setChats]=useState();
-    const [s,sets]=useState();
+    const [chats,setChats]=useState([]);
 
-    const arr=["1BQAWZmxvcmEud2ViLnRlbGVncmFtLm9yZwG7ZxKcV8Hm6yk05ncaNI65p1S/P42XGb5+2GWVJK95Jho6k/W3V69n93Rv5+RefneTrPzwDJESEZRInnLZKIEoXl3kRM3BXVHXY6+N0Hnt7lQ2gYwNLFYvwZ2eDQwTI2q7Nf6Ulv0huVlGC7m+0uOwwhBVS95lO7Z7XA1VYyWFGNhADQuk8r+qXb20gjp6+bZOc3yu3aIiKeI9eWxoSnc5GNkMN2Mk+yQ1yFXzz0Nv7JlqGoxtnZ9xV4DW4+L2aRhMBNKAEBpUa+heWCNKXoxa5fCjfSjn5RFCFQq5nHG/chpD3Yms0HK0g0dm4IZb+5PPDJCUGNVGVe8lqHgRbSIIWA==","1BQAWZmxvcmEud2ViLnRlbGVncmFtLm9yZwG7QMJov4h9tQqwYo70BHC+jrqKcghfAL9NCmxAggWYhW51tfPY90tzWYkKlQNStqATpkzOia4DARndVk2bsMgP4DgSvSnjZPNlLivtFSZaaRhxK/bH+/kmSL0rOJ96brAuVAX2oRIod1at3fzBY8NnNaD1A4XmV9NZjRtkzaptT3GtcR+WcxxsiLsM7z+NeQVwBOAhdC2VXSjXKpmpBSvpB92S8e4H3/HD1LZy3lACj8UFvscHMAKK2gybChcYP5LIYm5BeW31t/OcgzVqAUoBYay16ARRHNPjI4a9/tvjcpG3TphL+HGDayZpuxi48tRS85UDjXFvbP0QNobb33lkIA=="]
-    const [{phoneNumber,password,phoneCode},setAuthInfo]=useState<IInitialState>(initialState)
+    const [chatIndex,setChatIndex]=useState();
+
+    const arr=[
+        "1BQAWZmxvcmEud2ViLnRlbGVncmFtLm9yZwG7ZxKcV8Hm6yk05ncaNI65p1S/P42XGb5+2GWVJK95Jho6k/W3V69n93Rv5+RefneTrPzwDJESEZRInnLZKIEoXl3kRM3BXVHXY6+N0Hnt7lQ2gYwNLFYvwZ2eDQwTI2q7Nf6Ulv0huVlGC7m+0uOwwhBVS95lO7Z7XA1VYyWFGNhADQuk8r+qXb20gjp6+bZOc3yu3aIiKeI9eWxoSnc5GNkMN2Mk+yQ1yFXzz0Nv7JlqGoxtnZ9xV4DW4+L2aRhMBNKAEBpUa+heWCNKXoxa5fCjfSjn5RFCFQq5nHG/chpD3Yms0HK0g0dm4IZb+5PPDJCUGNVGVe8lqHgRbSIIWA==",
+        "1BQAWZmxvcmEud2ViLnRlbGVncmFtLm9yZwG7QMJov4h9tQqwYo70BHC+jrqKcghfAL9NCmxAggWYhW51tfPY90tzWYkKlQNStqATpkzOia4DARndVk2bsMgP4DgSvSnjZPNlLivtFSZaaRhxK/bH+/kmSL0rOJ96brAuVAX2oRIod1at3fzBY8NnNaD1A4XmV9NZjRtkzaptT3GtcR+WcxxsiLsM7z+NeQVwBOAhdC2VXSjXKpmpBSvpB92S8e4H3/HD1LZy3lACj8UFvscHMAKK2gybChcYP5LIYm5BeW31t/OcgzVqAUoBYay16ARRHNPjI4a9/tvjcpG3TphL+HGDayZpuxi48tRS85UDjXFvbP0QNobb33lkIA==",
+    ];
+
     // async function clientStartHandler(): Promise<void> {
+
     //     try {
+
     //         await client.start({ phoneNumber, password: userAuthParamCallback(password), phoneCode: userAuthParamCallback(phoneCode), onError: () => { } })
+
     //         localStorage.setItem(phoneNumber, JSON.stringify(client.session.save())) // Save session to local storage
+
     //     } catch (error) {
+
     //       return  console.log(error)
+
     //     }
+
     // }
+
     // async function sendCodeHandler() {
+
     //     await client.connect() // Connecting to the server
+
     //     console.log(phoneNumber);
 
     //     await client.sendCode(
-    //         {
-    //             apiId: apiID,
-    //             apiHash: apiHash
-    //         },
-    //         phoneNumber
-    //     )
-    // }
-    function inputChangeHandler({target: {name,value}}: BaseSyntheticEvent): void {
-        setAuthInfo((authInfo) => ({...authInfo,[name]: value}))
-    }
 
-    function userAuthParamCallback<T>(param: T): () => Promise<T> {
-        return async function() {
-            return await new Promise<T>(resolve => {
-                resolve(param)
-            })
-        }
-    }
-    const arrayBufferToBase64=(buffer: any) => {
-        var binary='';
-        var bytes=[].slice.call(new Uint8Array(buffer));
-        bytes.forEach((b) => binary+=String.fromCharCode(b));
-        return window.btoa(binary);
-    };
+    //         {
+
+    //             apiId: apiID,
+
+    //             apiHash: apiHash
+
+    //         },
+
+    //         phoneNumber
+
+    //     )
+
+    // }
+
     const init=async () => {
         for(let index=0;index<1;index++) {
             const element=arr[index];
-            const SESSION=new StringSession(element) // Get session from local storage
-            const client=new TelegramClient(SESSION,apiID,apiHash,{connectionRetries: 5})
 
-            await client.connect() // Connecting to the server
+            const SESSION=new StringSession(element); // Get session from local storage
+
+            const client=new TelegramClient(SESSION,apiID,apiHash,{
+                connectionRetries: 5,
+            });
+
+            await client.connect(); // Connecting to the server
+
             // const LIMIT = 4;
-            const offsetId=0;
-            const offsetPeer=new Api.InputPeerEmpty();
-            let offsetDate=0;
-            let chats=[];
-            const me: any=await client.getMe()
 
+            const offsetId=0;
+
+            const offsetPeer=new Api.InputPeerEmpty();
+
+            let offsetDate=0;
+
+            let chats=[];
+
+            const me: any=await client.getMe();
 
             const result: any=await client.invoke(
-
                 new Api.messages.GetDialogs({
                     offsetId,
+
                     offsetPeer,
+
                     offsetDate,
-                }),
+                    limit: 10000
+                })
             );
+
             // const results: any = await client.invoke(
+
             //     new Api.photos.GetUserPhotos({
+
             //       userId: result.chats[0].id,
+
             //       offset: 43,
+
             //       maxId: readBigIntFromBuffer(generateRandomBytes(8)),
+
             //       limit: 100,
+
             //     })
+
             //   );
 
             // const results: any = await client.invoke(
-            //     new Api.upload.GetFile({
-            //       fileToken: Buffer.from(result.chats[0].photo.strippedThumb.buffer),
-            //       offset: readBigIntFromBuffer(generateRandomBytes(8)),
-            //     })
-            //   );
-            console.log(result.chats[0]);
-             const buffer = result.chats[0].photo.strippedThumb
-             const blob = new Blob([buffer]);
-                                        
-             const url = window.URL.createObjectURL(blob);
-            //  const a = document.createElement("a");
-            //  document.body.appendChild(a);
-            //  a.href = url;
-            // //  a.download = "filename.jpg";
-            // //  a.click();
-            // //  window.URL.revokeObjectURL(url);
-            // console.log(url);
-            
-            // const results = await client.invoke(
-            //     new Api.upload.GetCdnFile({
-            //       fileToken:.buffer,
-            //       offset: 0,
-            //       limit: 100,
-            //     })
-            //   );
-            // const results: any = await client.invoke(new Api.upload.GetFile({
-            //     offset: 0,
-            //     limit: 1024 * 1024,
-            //     precise: false,
-            //     cdnSupported: false,
-            //     location: new Api.InputFileLocation({ 
-            //          volumeId: result.chats[0].accessHash                     ,
-            //         localId: 1,
-            //         secret: readBigIntFromBuffer(generateRandomBytes(8)),
-            //         fileReference: 
-            //     }),
-            //     }));
-            // console.log(results); // prints the result
-           
 
-            setChats(url)
+            //     new Api.upload.GetFile({
+
+            //       fileToken: Buffer.from(result.chats[0].photo.strippedThumb.buffer),
+
+            //       offset: readBigIntFromBuffer(generateRandomBytes(8)),
+
+            //     })
+
+            //   );
+
+
+
+            //  const a = document.createElement("a");
+
+            //  document.body.appendChild(a);
+
+            //  a.href = url;
+
+            //  a.download = "filename.jpg";
+
+            //  a.click();
+
+            //  window.URL.revokeObjectURL(url);
+
+            //     console.log(url);
+
+            // const results = await client.invoke(
+
+            //     new Api.upload.GetCdnFile({
+
+            //       fileToken:.buffer,
+
+            //       offset: 0,
+
+            //       limit: 100,
+
+            //     })
+
+            //   );
+
+            // const results: any = await client.invoke(new Api.upload.GetFile({
+
+            //     offset: 0,
+
+            //     limit: 1024 * 1024,
+
+            //     precise: false,
+
+            //     cdnSupported: false,
+
+            //     location: new Api.InputFileLocation({
+
+            //          volumeId: result.chats[0].accessHash                     ,
+
+            //         localId: 1,
+
+            //         secret: readBigIntFromBuffer(generateRandomBytes(8)),
+
+            //         fileReference:
+
+            //     }),
+
+            //     }));
+
+            // console.log(results); // prints the result
+            // let arrs=[]
+            // for(let index=0;index<result.chats.length;index++) {
+            //     const element=result.chats[index];
+            //     if(element.username) {
+            //         const buffers=await client.downloadProfilePhoto(element.username)
+            //         const blob=new Blob([buffers] as any);
+            //         const url=window.URL.createObjectURL(blob);
+            //         arrs.push({
+            //             src: url
+            //         })
+            //     }
+            // }
+
+            // setChats(arrs)
+            //  const buffers=await client.downloadProfilePhoto(result.chats[0].username)
+            //                     const blob=new Blob([buffers] as any);
+            //                     const url=window.URL.createObjectURL(blob);
+            //                     console.log(url);
+            // const buffers = await client.downloadProfilePhoto( result.chats[0].username)
+
+            // console.log("Downloaded image is",buffers);
+
+
+
+
+            //  const blob = new Blob([result.chats[0].photo.strippedThumb]);
+            //  const buffers = await client.downloadProfilePhoto( result.chats[0].username)
+            //  console.log(buffers);
+
+            let a=result.messages.filter((item: any) => item.peerId.className==='PeerUser'&&item.className==="Message")
+            let res=a.map((s: any) => s.id);
+
+            const user: any=await client.invoke(
+                new Api.messages.GetMessages({
+                    id: res
+                })
+            );
+            console.log(user);
+            
+            let arrUser: any=[]
+            for(let index=0;index<user.messages.length;index++) {
+                const element=user.messages[index];
+                if(user.users[index+1].username) {
+                    if(user.users[index+1].photo) {
+                        const buffers=await client.downloadProfilePhoto(user.users[index+1].username)
+                        const blob=new Blob([buffers] as any);
+                        const url=window.URL.createObjectURL(blob);
+                        console.log(element);
+                        
+                        arrUser.push({
+                            name: user.users[index+1].firstName,
+                            img: url,
+                            lastMessage: element.message,
+                            id: element.id
+                        })
+                    } else {
+                        arrUser.push({
+                            name: user.users[index+1].firstName,
+                            img: null,
+                            lastMessage: element.message,
+                            id: element.id
+                        })
+                    }
+
+                }
+
+            }
+
+            //  const url = window.URL.createObjectURL(blob);
+
+            //  const a = document.createElement("a");
+
+            //  document.body.appendChild(a);
+
+            //  a.href = url;
+
+            //  a.download = "filename.jpg";
+
+            //  a.click();
+
+            //  window.URL.revokeObjectURL(url);
+            setChats(arrUser)
+
             client.addEventHandler((event: any) => {
                 if(event.isPrivate) {
                     // prints sender id
+
                     const message=event.message;
+
                     console.log(message.senderId);
+
                     // read message
+
                     // if (message.text == "hello") {
+
                     // const sender = await message.getSender();
+
                     // console.log("sender is", sender);
+
                     // await client.sendMessage(sender, {
+
                     //     message: `hi your id is ${message.senderId}`
+
                     // });
                 }
-                // console.log(event.message); // Log the message object
 
+                // console.log(event.message); // Log the message object
             },new NewMessage({}));
         }
+
         // const SESSIONs = new StringSession(JSON.parse(localStorage.getItem('84346508758') as string)) // Get session from local storage
 
         // console.log(result);
 
+    };
 
-
-
-
-    }
     useEffect(() => {
-        init()
-    },[])
-    console.log(chats);
+        init();
+    },[]);
 
-    return (
-        <motion.div variants={oapcityVariants} exit="hidden" initial="hidden" animate="visible" className="flex flex-col h-[calc(100vh-64px)] w-screen">
-            <img src={chats} alt="" />
-            {/* <div className="shadow-box p-[20px] md:p-10  flex items-center justify-center bg-base bg-cover bg-no-repeat bg-center flex-1">
-                <div className=" bg-white rounded-[24px] min-w-full md:min-w-[400px] flex shadow-box">
-                    <motion.div
-                        variants={oapcityVariants}
-                        exit="hidden"
-                        initial="hidden"
-                        animate="visible"
-                        className="right p-[20px] md:p-8 rounded-xl md:max-w-[400px] w-full flex flex-col"
-                    >
-                        <div className="w-full">
-                            <div className="mb-10">
-                                <div className="flex justify-center">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" className="animate-pulse animate-bounce h-16 cursor-pointer" alt="logo" />
-
-                                </div>
-                                <h2 className="mt-4 text-center text-3xl font-extrabold text-gray-900">
-                                    Đăng nhập vào tool
-                                </h2>
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" >
-                                    Số điện thoại
-                                </label>
-                                <input
-                                    onChange={inputChangeHandler}
-                                    style={{backgroundColor: 'white'}}
-                                    className=" text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    name="phoneNumber"
-                                    type="text"
-                                    placeholder="Nhập vào số điện thoại có mã vùng" />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" >
-                                    password
-                                </label>
-                                <input
-                                    onChange={inputChangeHandler}
-                                    name="password"
-                                    style={{backgroundColor: 'white'}} className=" text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phone" type="text" placeholder="Nhập vào số điện thoại có mã vùng" />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" >
-                                    phoneCode
-                                </label>
-                                <input
-                                    onChange={inputChangeHandler}
-                                    name="phoneCode"
-                                    style={{backgroundColor: 'white'}} className=" text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phone" type="text" placeholder="Nhập vào số điện thoại có mã vùng" />
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <Button
-                                    // onClick={sendCodeHandler}
-                                    className="w-full"
-                                    children={"Đăng snhập"}
-                                />
-                                <Button
-                                    // onClick={clientStartHandler}
-                                    className="w-full"
-                                    children={"Đăng nhập"}
-                                />
-                            </div>
-                        </div>
-                    </motion.div>
+    if(!chats) return
+    return <div className="w-full flex justify-start">
+        <div className="flex flex-col bg-slate-400 w-[300px] h-screen">
+            {chats.map((item) => {
+                return <div className="flex  justify-start p-3 cursor-pointer" key={item.id} onClick={() => {setChatIndex(item)}}>
+                    <img src={!item?.img? "https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg":item.img} alt="" className="w-[50px] h-[50px]  border-[2px] border-black rounded-full" />
+                    <div className="flex flex-col">
+                        <span className="font-bold">{item.name}</span>
+                        <span className="font-semi text-sm">{item.lastMessage}</span>
+                    </div>
                 </div>
-            </div> */}
-        </motion.div >
-    );
+            })}
+        </div>
+        <Chat user={chatIndex} />
+    </div>;
 };
+
 export default Login;
