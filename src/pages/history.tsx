@@ -24,7 +24,7 @@ export default function index() {
     }
     useEffect(() => {
         init()
-    }, []);
+    }, [result]);
     return (
         <div className='flex flex-col justify-center items-center w-full text-black'>
             <h1>Danh sách liên hệ </h1>
