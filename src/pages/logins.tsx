@@ -222,35 +222,36 @@ const Login=() => {
                     id: res
                 })
             );
-            console.log(user);
-            
+
             let arrUser: any=[]
+            let users=user.users.filter((item: any) => !item.self)
+            console.log(user.messages);
+            
             for(let index=0;index<user.messages.length;index++) {
                 const element=user.messages[index];
-                if(user.users[index+1].username) {
-                    if(user.users[index+1].photo) {
-                        const buffers=await client.downloadProfilePhoto(user.users[index+1].username)
+                if(users[index].username) {
+                    if(users[index].photo) {
+                        const buffers=await client.downloadProfilePhoto(users[index].username)
                         const blob=new Blob([buffers] as any);
                         const url=window.URL.createObjectURL(blob);
-                        console.log(element);
-                        
+
                         arrUser.push({
-                            name: user.users[index+1].firstName,
+                            name: users[index].firstName,
                             img: url,
                             lastMessage: element.message,
-                            id: element.id
+                            id: element.id,
+                            chatId:element.chatId
                         })
                     } else {
                         arrUser.push({
-                            name: user.users[index+1].firstName,
+                            name: users[index].firstName,
                             img: null,
                             lastMessage: element.message,
-                            id: element.id
+                            id: element.id,
+                            chatId:element.chatId
                         })
                     }
-
                 }
-
             }
 
             //  const url = window.URL.createObjectURL(blob);
@@ -274,7 +275,7 @@ const Login=() => {
 
                     const message=event.message;
 
-                    console.log(message.senderId);
+                    console.log(message);
 
                     // read message
 
@@ -306,7 +307,7 @@ const Login=() => {
     },[]);
 
     if(!chats) return
-    return <div className="w-full flex justify-start">
+    return <div className="w-full flex justify-between">
         <div className="flex flex-col bg-slate-400 w-[300px] h-screen">
             {chats.map((item) => {
                 return <div className="flex  justify-start p-3 cursor-pointer" key={item.id} onClick={() => {setChatIndex(item)}}>
