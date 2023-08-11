@@ -1,5 +1,5 @@
 import Chat from "@/components/chat";
-import {BaseSyntheticEvent,useEffect,useState} from "react";
+import {useEffect,useState} from "react";
 
 import {Api,TelegramClient} from "telegram";
 
@@ -23,6 +23,7 @@ const Login=() => {
     const [chats,setChats]=useState([]);
 
     const [chatIndex,setChatIndex]=useState();
+    const [client,setClient]=useState();
 
     const arr=[
         "1BQAWZmxvcmEud2ViLnRlbGVncmFtLm9yZwG7ZxKcV8Hm6yk05ncaNI65p1S/P42XGb5+2GWVJK95Jho6k/W3V69n93Rv5+RefneTrPzwDJESEZRInnLZKIEoXl3kRM3BXVHXY6+N0Hnt7lQ2gYwNLFYvwZ2eDQwTI2q7Nf6Ulv0huVlGC7m+0uOwwhBVS95lO7Z7XA1VYyWFGNhADQuk8r+qXb20gjp6+bZOc3yu3aIiKeI9eWxoSnc5GNkMN2Mk+yQ1yFXzz0Nv7JlqGoxtnZ9xV4DW4+L2aRhMBNKAEBpUa+heWCNKXoxa5fCjfSjn5RFCFQq5nHG/chpD3Yms0HK0g0dm4IZb+5PPDJCUGNVGVe8lqHgRbSIIWA==",
@@ -68,7 +69,7 @@ const Login=() => {
     // }
 
     const init=async () => {
-        for(let index=0;index<1;index++) {
+        for(let index=1;index<2;index++) {
             const element=arr[index];
 
             const SESSION=new StringSession(element); // Get session from local storage
@@ -78,222 +79,14 @@ const Login=() => {
             });
 
             await client.connect(); // Connecting to the server
-
+            setClient(client)
             // const LIMIT = 4;
-
-            const offsetId=0;
-
-            const offsetPeer=new Api.InputPeerEmpty();
-
-            let offsetDate=0;
-
-            let chats=[];
-
-            const me: any=await client.getMe();
-
-            const result: any=await client.invoke(
-                new Api.messages.GetDialogs({
-                    offsetId,
-
-                    offsetPeer,
-
-                    offsetDate,
-                    limit: 10000
-                })
-            );
-
-            // const results: any = await client.invoke(
-
-            //     new Api.photos.GetUserPhotos({
-
-            //       userId: result.chats[0].id,
-
-            //       offset: 43,
-
-            //       maxId: readBigIntFromBuffer(generateRandomBytes(8)),
-
-            //       limit: 100,
-
-            //     })
-
-            //   );
-
-            // const results: any = await client.invoke(
-
-            //     new Api.upload.GetFile({
-
-            //       fileToken: Buffer.from(result.chats[0].photo.strippedThumb.buffer),
-
-            //       offset: readBigIntFromBuffer(generateRandomBytes(8)),
-
-            //     })
-
-            //   );
-
-
-
-            //  const a = document.createElement("a");
-
-            //  document.body.appendChild(a);
-
-            //  a.href = url;
-
-            //  a.download = "filename.jpg";
-
-            //  a.click();
-
-            //  window.URL.revokeObjectURL(url);
-
-            //     console.log(url);
-
-            // const results = await client.invoke(
-
-            //     new Api.upload.GetCdnFile({
-
-            //       fileToken:.buffer,
-
-            //       offset: 0,
-
-            //       limit: 100,
-
-            //     })
-
-            //   );
-
-            // const results: any = await client.invoke(new Api.upload.GetFile({
-
-            //     offset: 0,
-
-            //     limit: 1024 * 1024,
-
-            //     precise: false,
-
-            //     cdnSupported: false,
-
-            //     location: new Api.InputFileLocation({
-
-            //          volumeId: result.chats[0].accessHash                     ,
-
-            //         localId: 1,
-
-            //         secret: readBigIntFromBuffer(generateRandomBytes(8)),
-
-            //         fileReference:
-
-            //     }),
-
-            //     }));
-
-            // console.log(results); // prints the result
-            // let arrs=[]
-            // for(let index=0;index<result.chats.length;index++) {
-            //     const element=result.chats[index];
-            //     if(element.username) {
-            //         const buffers=await client.downloadProfilePhoto(element.username)
-            //         const blob=new Blob([buffers] as any);
-            //         const url=window.URL.createObjectURL(blob);
-            //         arrs.push({
-            //             src: url
-            //         })
+            // client.addEventHandler((event: any) => {
+            //     if(event.isPrivate) {
+            //         getListChat()
             //     }
-            // }
+            // },new NewMessage({}));
 
-            // setChats(arrs)
-            //  const buffers=await client.downloadProfilePhoto(result.chats[0].username)
-            //                     const blob=new Blob([buffers] as any);
-            //                     const url=window.URL.createObjectURL(blob);
-            //                     console.log(url);
-            // const buffers = await client.downloadProfilePhoto( result.chats[0].username)
-
-            // console.log("Downloaded image is",buffers);
-
-
-
-
-            //  const blob = new Blob([result.chats[0].photo.strippedThumb]);
-            //  const buffers = await client.downloadProfilePhoto( result.chats[0].username)
-            //  console.log(buffers);
-
-            let a=result.messages.filter((item: any) => item.peerId.className==='PeerUser'&&item.className==="Message")
-            let res=a.map((s: any) => s.id);
-
-            const user: any=await client.invoke(
-                new Api.messages.GetMessages({
-                    id: res
-                })
-            );
-
-            let arrUser: any=[]
-            let users=user.users.filter((item: any) => !item.self)
-            console.log(user.messages);
-            
-            for(let index=0;index<user.messages.length;index++) {
-                const element=user.messages[index];
-                if(users[index].username) {
-                    if(users[index].photo) {
-                        const buffers=await client.downloadProfilePhoto(users[index].username)
-                        const blob=new Blob([buffers] as any);
-                        const url=window.URL.createObjectURL(blob);
-
-                        arrUser.push({
-                            name: users[index].firstName,
-                            img: url,
-                            lastMessage: element.message,
-                            id: element.id,
-                            chatId:element.chatId
-                        })
-                    } else {
-                        arrUser.push({
-                            name: users[index].firstName,
-                            img: null,
-                            lastMessage: element.message,
-                            id: element.id,
-                            chatId:element.chatId
-                        })
-                    }
-                }
-            }
-
-            //  const url = window.URL.createObjectURL(blob);
-
-            //  const a = document.createElement("a");
-
-            //  document.body.appendChild(a);
-
-            //  a.href = url;
-
-            //  a.download = "filename.jpg";
-
-            //  a.click();
-
-            //  window.URL.revokeObjectURL(url);
-            setChats(arrUser)
-
-            client.addEventHandler((event: any) => {
-                if(event.isPrivate) {
-                    // prints sender id
-
-                    const message=event.message;
-
-                    console.log(message);
-
-                    // read message
-
-                    // if (message.text == "hello") {
-
-                    // const sender = await message.getSender();
-
-                    // console.log("sender is", sender);
-
-                    // await client.sendMessage(sender, {
-
-                    //     message: `hi your id is ${message.senderId}`
-
-                    // });
-                }
-
-                // console.log(event.message); // Log the message object
-            },new NewMessage({}));
         }
 
         // const SESSIONs = new StringSession(JSON.parse(localStorage.getItem('84346508758') as string)) // Get session from local storage
@@ -301,9 +94,192 @@ const Login=() => {
         // console.log(result);
 
     };
+    const getListChat=async () => {
 
+        const offsetId=0;
+
+        const offsetPeer=new Api.InputPeerEmpty();
+
+        let offsetDate=0;
+
+        const result: any=await client.invoke(
+            new Api.messages.GetDialogs({
+                offsetId,
+                offsetPeer,
+                offsetDate,
+                limit: 10000
+            })
+        );
+
+        // const results: any = await client.invoke(
+
+        //     new Api.photos.GetUserPhotos({
+
+        //       userId: result.chats[0].id,
+
+        //       offset: 43,
+
+        //       maxId: readBigIntFromBuffer(generateRandomBytes(8)),
+
+        //       limit: 100,
+
+        //     })
+
+        //   );
+
+        // const results: any = await client.invoke(
+
+        //     new Api.upload.GetFile({
+
+        //       fileToken: Buffer.from(result.chats[0].photo.strippedThumb.buffer),
+
+        //       offset: readBigIntFromBuffer(generateRandomBytes(8)),
+
+        //     })
+
+        //   );
+
+
+
+        //  const a = document.createElement("a");
+
+        //  document.body.appendChild(a);
+
+        //  a.href = url;
+
+        //  a.download = "filename.jpg";
+
+        //  a.click();
+
+        //  window.URL.revokeObjectURL(url);
+
+        //     console.log(url);
+
+        // const results = await client.invoke(
+
+        //     new Api.upload.GetCdnFile({
+
+        //       fileToken:.buffer,
+
+        //       offset: 0,
+
+        //       limit: 100,
+
+        //     })
+
+        //   );
+
+        // const results: any = await client.invoke(new Api.upload.GetFile({
+
+        //     offset: 0,
+
+        //     limit: 1024 * 1024,
+
+        //     precise: false,
+
+        //     cdnSupported: false,
+
+        //     location: new Api.InputFileLocation({
+
+        //          volumeId: result.chats[0].accessHash                     ,
+
+        //         localId: 1,
+
+        //         secret: readBigIntFromBuffer(generateRandomBytes(8)),
+
+        //         fileReference:
+
+        //     }),
+
+        //     }));
+
+        // console.log(results); // prints the result
+        // let arrs=[]
+        // for(let index=0;index<result.chats.length;index++) {
+        //     const element=result.chats[index];
+        //     if(element.username) {
+        //         const buffers=await client.downloadProfilePhoto(element.username)
+        //         const blob=new Blob([buffers] as any);
+        //         const url=window.URL.createObjectURL(blob);
+        //         arrs.push({
+        //             src: url
+        //         })
+        //     }
+        // }
+
+        // setChats(arrs)
+        //  const buffers=await client.downloadProfilePhoto(result.chats[0].username)
+        //                     const blob=new Blob([buffers] as any);
+        //                     const url=window.URL.createObjectURL(blob);
+        //                     console.log(url);
+        // const buffers = await client.downloadProfilePhoto( result.chats[0].username)
+
+        // console.log("Downloaded image is",buffers);
+
+
+
+
+        //  const blob = new Blob([result.chats[0].photo.strippedThumb]);
+        //  const buffers = await client.downloadProfilePhoto( result.chats[0].username)
+        //  console.log(buffers);
+
+        let a=result.messages.filter((item: any) => item.peerId.className==='PeerUser'&&item.className==="Message")
+        let res=a.map((s: any) => s.id);
+
+        const user: any=await client.invoke(
+            new Api.messages.GetMessages({
+                id: res
+            })
+        );
+
+        let arrUser: any=[]
+        let users=user.users.filter((item: any) => !item.self)
+
+        for(let index=0;index<user.messages.length;index++) {
+            const element=user.messages[index];
+            if(users[index].username) {
+                if(users[index].photo) {
+                    const buffers=await client.downloadProfilePhoto(users[index].username)
+                    const blob=new Blob([buffers] as any);
+                    const url=window.URL.createObjectURL(blob);
+
+                    arrUser.push({
+                        name: users[index].firstName,
+                        img: url,
+                        lastMessage: element.message,
+                        id: element.id,
+                        chatId: element.chatId
+                    })
+                } else {
+                    arrUser.push({
+                        name: users[index].firstName,
+                        img: null,
+                        lastMessage: element.message,
+                        id: element.id,
+                        chatId: element.chatId
+                    })
+                }
+            }
+        }
+
+        //  const url = window.URL.createObjectURL(blob);
+
+        //  const a = document.createElement("a");
+
+        //  document.body.appendChild(a);
+
+        //  a.href = url;
+
+        //  a.download = "filename.jpg";
+
+        //  a.click();
+
+        //  window.URL.revokeObjectURL(url);
+        setChats(arrUser)
+    }
     useEffect(() => {
         init();
+        getListChat()
     },[]);
 
     if(!chats) return
@@ -319,7 +295,7 @@ const Login=() => {
                 </div>
             })}
         </div>
-        <Chat user={chatIndex} />
+        {chatIndex&&<Chat user={chatIndex} client={client} />}
     </div>;
 };
 
