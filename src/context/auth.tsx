@@ -12,6 +12,7 @@ type State = {
     user: any | null
     result: any
     getListUserAdd: () => Promise<void>
+    appInfor: any
 }
 
 interface AuthProviderProps {
@@ -25,13 +26,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const [client, setClient] = useState<any>()
     const [loading, setLoading] = useState<boolean>(true)
     const { toggleToast } = useToast();
+    const [appInfor, setAppInfor] = useState<any>(undefined)
 
     const init = async () => {
-        const randomInfo = hashs[Math.floor(Math.random()*hashs.length)];
+        const randomInfo = hashs[Math.floor(Math.random() * hashs.length)];
         const stringSession = new StringSession(localStorage.getItem("sessionString") || "");
         const clientTele = new TelegramClient(stringSession, randomInfo.id, randomInfo.hash, {
             connectionRetries: 5,
         });
+        setAppInfor(randomInfo)
         await clientTele.connect();
         setClient(clientTele)
 
@@ -55,8 +58,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         init()
     }, []);
 
-    const getListUserAdd = async()=>{
-        await client.connect(); // This assumes you have already authenticated with .start()
+    const getListUserAdd = async () => {
+       
         const result = await client.invoke(
             new Api.contacts.GetContacts({})
         );
@@ -70,7 +73,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
                 loading,
                 user,
                 result,
-                getListUserAdd
+                getListUserAdd,
+                appInfor
             }}
         >
             {!loading && children}

@@ -3,7 +3,9 @@ import { useToast } from '@/context/toast';
 import { supabase } from '@/services/supabase';
 import moment from "moment";
 import { useEffect, useState } from 'react';
-import Login from './logins';
+import LoginTelegram from './loginTelegram';
+
+// import Login from './logins';
 
 export default function index() {
      
@@ -42,9 +44,9 @@ export default function index() {
     };
 
     return (
-        <div className='flex flex-col justify-center items-center w-full h-full'>
+        <div>
             {isAuth ? <>
-                <Login/>
+                <LoginTelegram/>
             </>
                 : <p className='text-black text-4xl font-extrabold mt-10'>Tài khoản bị khóa hoặc hết hạn</p>}
         </div>
