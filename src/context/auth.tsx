@@ -56,7 +56,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }, []);
 
     const getListUserAdd = async()=>{
-        await client.connect(); // This assumes you have already authenticated with .start()
+        await client.connect(); // This assumes you have already authenticated with .start()   
         const result = await client.invoke(
             new Api.contacts.GetContacts({})
         );
