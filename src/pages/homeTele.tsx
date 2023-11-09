@@ -199,6 +199,8 @@ export default function index() {
     const onLogout = async () => {
         await client?.invoke(new Api.auth.LogOut())
         localStorage.removeItem("sessionString")
+        localStorage.removeItem("id");
+        localStorage.removeItem("hash");
         location.reload()
     };
 
