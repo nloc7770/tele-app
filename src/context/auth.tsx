@@ -11,7 +11,6 @@ type State = {
   user: any | null;
   result: any;
   getListUserAdd: () => Promise<void>;
-  setClient: (client: any) => void;
 };
 
 interface AuthProviderProps {
@@ -27,38 +26,34 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const { toggleToast } = useToast();
 
   const init = async () => {
-    try {
-      const randomInfo = hashs[Math.floor(Math.random() * hashs.length)];
-      const stringSession = new StringSession(
-        localStorage.getItem("sessionString") || ""
-      );
-      const id = parseInt(localStorage.getItem("id")||"0") 
-      const hash =  localStorage.getItem("hash") || "";
-
-      if (!id || !hash) return setLoading(false);
-      const clientTele = new TelegramClient(stringSession, id, hash, {
+    const randomInfo = hashs[Math.floor(Math.random() * hashs.length)];
+    const stringSession = new StringSession(
+      localStorage.getItem("sessionString") || ""
+    );
+    const clientTele = new TelegramClient(
+      stringSession,
+      randomInfo.id,
+      randomInfo.hash,
+      {
         connectionRetries: 5,
-      });
-      await clientTele.connect();
-      setClient(clientTele);
-      if (await clientTele.checkAuthorization()) {
-        const me = await clientTele.getMe();
-        setUser(me);
-        toggleToast({
-          show: true,
-          status: "success",
-          message: "You should now be connected.",
-          time: 5000,
-        });
-        const result = await clientTele.invoke(
-          new Api.contacts.GetContacts({})
-        );
-        setResult(result);
       }
-      setLoading(false);
-    } catch (error) {
-      console.log("--------------------");
+    );
+    await clientTele.connect();
+    setClient(clientTele);
+
+    if (await clientTele.checkAuthorization()) {
+      const me = await clientTele.getMe();
+      setUser(me);
+      toggleToast({
+        show: true,
+        status: "success",
+        message: "You should now be connected.",
+        time: 5000,
+      });
+      const result = await clientTele.invoke(new Api.contacts.GetContacts({}));
+      setResult(result);
     }
+    setLoading(false);
   };
   useEffect(() => {
     init();
@@ -78,7 +73,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         user,
         result,
         getListUserAdd,
-        setClient,
       }}
     >
       {!loading && children}
