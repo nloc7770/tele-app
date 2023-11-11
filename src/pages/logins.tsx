@@ -44,7 +44,6 @@ const Login = () => {
         "sessionString",
         client.session.save() as any as string
       );
-      // location.href = "https://tele-app-kappa.vercel.app/"
       location.reload();
     } catch (error) {
       console.dir(error);
